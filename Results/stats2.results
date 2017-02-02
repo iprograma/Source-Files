@@ -1,0 +1,24 @@
+This is how you typically show output
+1: Mercer	2895
+2: Louisville	2892
+3: BYU	2863
+4: New Mexico State	2802
+5: UCLA	2782
+0 => Mercer		2895
+1 => Louisville		2892
+2 => BYU		2863
+3 => New Mexico State		2802
+4 => UCLA		2782
+
+This is how you can show results using Programa
+Team Points Scored
+          Mercer	2895	
+      Louisville	2892	
+             BYU	2863	
+New Mexico State	2802	
+            UCLA	2782	
+
+
+ALL TESTS PASSED
+
+

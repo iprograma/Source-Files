@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<title> firstWebApp.prgm </title>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="libraries/HTMLLibraries.js"></script>
+</head>
+
+<body>
+
+<script>
+	document.write("");
+	var checkBoxDr = document.createElement('input');
+	checkBoxDr.type = "checkbox";
+	checkBoxDr.id = "checkBoxDr";
+	document.body.appendChild(checkBoxDr);
+	document.write("<br>");
+	document.write("");
+	var CheckBoxMr = document.createElement('input');
+	CheckBoxMr.type = "checkbox";
+	CheckBoxMr.id = "CheckBoxMr";
+	document.body.appendChild(CheckBoxMr);
+	document.write("<br>");
+	document.write("");
+	var checkBoxMs = document.createElement('input');
+	checkBoxMs.type = "checkbox";
+	checkBoxMs.id = "checkBoxMs";
+	document.body.appendChild(checkBoxMs);
+	document.write("<br>");
+
+	createTable("saluteTableTable", 3, 2);
+	var saluteTable = document.getElementById('saluteTableTable');
+	saluteTable.rows[0].cells[0].appendChild(document.createTextNode("Dr"));
+	saluteTable.rows[0].cells[1].appendChild(  checkBoxDr  );
+	saluteTable.rows[1].cells[0].appendChild(document.createTextNode("Mr"));
+	saluteTable.rows[1].cells[1].appendChild(  CheckBoxMr  );
+	saluteTable.rows[2].cells[0].appendChild(document.createTextNode("Ms"));
+	saluteTable.rows[2].cells[1].appendChild(  checkBoxMs    );
+	document.write("First Name");
+	var firstName = document.createElement('input');
+	firstName.type = "input";
+	firstName.id = "firstName";
+	firstName.value = "";
+	document.body.appendChild(firstName);
+	document.write("<br>");
+	document.write("Last Name");
+	var lastName = document.createElement('input');
+	lastName.type = "input";
+	lastName.id = "lastName";
+	lastName.value = "";
+	document.body.appendChild(lastName);
+	document.write("<br>");
+	document.write("User Name");
+	var userName = document.createElement('input');
+	userName.type = "input";
+	userName.id = "userName";
+	userName.value = "";
+	document.body.appendChild(userName);
+	document.write("<br>");
+
+</script>
+</body>
+</html>

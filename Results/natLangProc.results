@@ -1,0 +1,55 @@
+20	       Creighton	0.421	
+15	         Belmont	0.397	
+12	            Iona	0.396	
+27	            IPFW	0.394	
+23	         Gonzaga	0.394	
+22	          Oregon	0.392	
+24	            Duke	0.391	
+ 2	            UCLA	0.391	
+25	Eastern Kentucky	0.390	
+17	          Baylor	0.390	
+
+PASS: list of names of the teams with the highest 3-point percentage
+
+UCLA is in TEAM field.
+1025 is in FTA field.
+UCLA played 34 games.
+Iowa State played 33 games.
+
+NatLangProc PASSED
+
+TEAM Duke  has 552 Free throws made 
+The TEAM  with the  highest   Free Throws Percentage  is Cal State Northridge (0.791)
+The TEAMs with the  best   Free Throws Percentage  are:
+ 9	Cal State Northridge	0.791	
+22	              Oregon	0.766	
+20	           Creighton	0.752	
+25	    Eastern Kentucky	0.751	
+18	            Oklahoma	0.750	
+The TEAMs with the  worst   Points  are:
+39	           Davidson	2514	
+38	     Texas Southern	2515	
+37	           Kentucky	2521	
+36	Charleston Southern	2523	
+34	  Stephen F. Austin	2524	
+TEAM Duke  has 33 Games Played 
+TEAM Duke  has 1895 Field Goals Attempted 
+TEAM Duke  has 883 Field Goals Made 
+The TEAM  with the  highest   Rank  is BYU (1)
+The TEAMs with the  highest   Rank  are:
+0	           BYU	1	
+1	    Louisville	2	
+2	          UCLA	3	
+3	Louisiana Tech	4	
+4	    Iowa State	5	
+Team	Points Scored
+          Mercer	2895	
+      Louisville	2892	
+             BYU	2863	
+New Mexico State	2802	
+            UCLA	2782	
+
+
+TEST PASSED
+
+

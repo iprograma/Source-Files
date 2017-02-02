@@ -1,0 +1,5 @@
+Tigers 35
+Zebras 67
+Lions  45
+Panthers 32
+Pythons 7

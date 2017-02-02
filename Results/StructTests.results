@@ -1,0 +1,36 @@
+
+----- Exploring Numbers ------------------
+alpha = 5, beta = 17, r = 117
+
+----- Exploring Structures and Arrays ------------------
+Jim and Kate have 2 kids
+Their names are: 
+John	
+Mary	
+They like eating
+   beef	
+  beans	
+oranges	
+ apples	
+ grapes	
+
+----- Exploring Functions ------------------
+
+Our list of numbers is
+10	
+24	
+34	
+ 5	
+ 9	
+95	
+19	
+
+Statistics of numbers:
+Max of numbers is: 95
+Min of numbers is: 5
+Average of numbers is: 28
+
+
+ALL TESTS PASSED
+
+

@@ -1,0 +1,23 @@
+
+// NCAA Division I Men's Basketball Team Scoring Statistics - 2013-14
+// Date 9/22/2014
+// Source http://espn.go.com/mens-college-basketball/statistics/team/_/stat/scoring
+//DataName=NCAABasketballStats
+DataName=statistics
+Legend Start
+RK=Rank
+TEAM=Team
+GP=Games Played
+PTS=Points
+Legend End
+
+RK,TEAM,GP,PTS
+1,BYU,34,2863
+2,Louisville,34,2892
+3,UCLA,34,2782
+4,Louisiana Tech,34,2755
+5,Iowa State,33,2735
+6,Vmi,31,2718
+7,Delaware,34,2704
+8,New Mexico State,35,2802
+9,Mercer,34,2895

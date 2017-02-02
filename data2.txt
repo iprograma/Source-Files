@@ -1,0 +1,4 @@
+Lions 34.5
+Rays  20.2
+Tigers 9.0
+Ninjas 2

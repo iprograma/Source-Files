@@ -1,0 +1,15 @@
+
+..... Using fopen and fscanf to read datafile
+
+Data = 4
+Ave = 16.425
+Max = 34.500
+Min = 2
+Worst Team is: Ninjas
+Best Team is: Lions
+stats1 PASS
+
+
+ALL TESTS PASSED
+
+
