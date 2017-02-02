@@ -1,0 +1,54 @@
+// Program to find min max ave
+main () {
+#if 1
+	show("\n..... Using fopen and fscanf to read datafile\n");
+	fp = fopen ( "data2.txt", "r" ) ;
+	n = 0 ;
+
+	while ( fscanf ( fp, "%s %f\n", teamname, inData ) == 1 ) {
+		data [ n ] = inData ;
+		teamNames[ n ] = teamname;
+		n = n + 1 ;
+	}
+#else
+	show("\n....... Using readDataFromFile to read datafile\n");
+	n = readDataFromFile ( "data2.txt", teamNames, data ) ;
+#endif
+
+	max = -1000 ;
+	min = 1000 ;
+	ave = 0 ;
+	bestName = "a" ;
+	worstName = "b" ;
+	error = 0;
+
+	for ( i = 0 ; i < n ; i = i  + 1 ) {
+		ave = ave + data [ i ] ;
+		if ( data [ i ] > max ) {
+			max = data [ i ] ;
+			bestName = teamNames [ i ] ;
+		} 
+		else if ( data [ i ] < min ) {
+			min = data [ i ] ;
+			worstName = teamNames [ i ] ;
+		}
+	}
+	ave = ave / n ;
+	show ( "Data = ", n, "\nAve = ", ave, "\nMax = ", max, "\nMin = ", min, "\nWorst Team is: ", worstName, "\nBest Team is: ", bestName ) ;
+
+	if( ave < 16 || ave > 17 || max < 34 || max > 35 || min != 2 ||  bestName != "Lions" || worstName != "Ninjas") {
+		show ("ERROR in stats1 numbers");
+		error = 1;
+	}
+	else {
+		show("stats1 PASS");
+	}
+	
+	if( error == 1 ) {
+		show("\n\nTEST FAILED\n\n");
+	}
+	else {
+		show("\n\nALL TESTS PASSED\n\n");
+	}
+
+}

@@ -1,0 +1,102 @@
+// This is a program to demonstrate natural language processing
+main () {
+	readAndAnalyzeDataFromFile ( "NCAAStats.txt" , statistics  ) ;
+	//  how many field goals duke made
+	//  how many free throws Duke made
+	//  what is the team with the highest free throw percentage
+	//  what are the top 5 teams with the best free throw percentage
+	//  list the 5 teams with the worst points made record
+	//  how many games Duke played
+	//  how many field goals Duke attempted
+	//  how many field goals Duke made
+	//  how many games UCLA played
+	//  which is the team with the highest rank
+    analyzeUserInput ( statistics , " how many games Duke played",  out: out0  ) ;
+}
+// -------------------------------------------------
+// Description : wSearch for name and return string
+SearchForNameAndReturnField (inp: array , valueToFind out: outField  ) {
+	found = 0 ;
+	if (  isNumber ( valueToFind )  ) {
+		nameType = "N" ;
+	}
+	else {
+		nameType = "T" ;
+	}
+	for (  j = 0  ;  j < array . numFields  ;  j ++   ) {
+		if (  nameType == array . field [ j ]  . type  ) {
+			field = array . field [ j ]  . name ;
+			for (  i = 0  ;  i < lengthOf ( array )   ;  i = i + 1  ) {
+				if (  array [ i ]  .  [ field ] == valueToFind  ) {
+					outField = field ;
+					found = 1 ;
+					break ;
+					//j = array . numFields 
+				}
+			}
+			if (  found == 1  ) {
+				break ;
+			}
+		}
+	}
+	if (  found == 0  ) {
+		outName = "Not found" ;
+	}
+}
+// -------------------------------------------------
+// Description : Find name in field
+SearchForNameInFieldAndReturnValue (inp: array , field , name , outField out: outName  ) {
+	found = 0 ;
+	for (  i = 0  ;  i < lengthOf ( array )   ;  i ++   ) {
+		if (  array [ i ]  .  [ field ] == name  ) {
+			outName = array [ i ]  .  [ outField ]  ;
+			found = 1 ;
+			i = lengthOf ( array )  ;
+		}
+	}
+	if (  found == 0  ) {
+		outName = "Not found" ;
+	}
+}
+// -----------------------------------------------------------
+// Description : Return value of a field
+returnFieldValue (inp: array , list , outField out: name  ) {
+	//show ( "Field is " , outField , " with value " )  
+	for (  i = 0  ;  i < lengthOf ( list )   ;  i ++   ) {
+		num = list [ i ]  ;
+		//show ( "Field is " , outField )  
+		name [ i ] = array [ num ]  .  [ outField ]  ;
+	}
+}
+// ------------------------------------------------------------
+// Description : search array
+findTopN (inp: array , N , type , fieldCheck out: resultList  ) {
+	for (  i = 0  ;  i < N  ;  i ++   ) {
+		if (  type == "max"  ) {
+			list [ i ]  . num = N_INFINITY ;
+		}
+		else {
+			list [ i ]  . num = P_INFINITY ;
+		}
+		list [ i ]  . id = 0 ;
+	}
+	dataLength = lengthOf ( array  ) ;
+	for (  i = 0  ;  i < dataLength  ;  i ++   ) {
+		num  = array [ i ]  .  [ fieldCheck ]  ;
+		for (  j = 0  ;  j < N  ;  j ++   ) {
+			compResult = num - list [ j ]  . num ;
+			if (  type == "max" && compResult >= 0 || type == "min" && compResult < 0  ) {
+				for (  k = N - 1  ;  k >= j + 1  ;  k --  ) {
+					list [ k ]  . id  = list [ k - 1 ]  . id ;
+					list [ k ]  . num = list [ k - 1 ]  . num ;
+				}
+				list [ j ]  . num = num ;
+				list [ j ]  . id = i ;
+				break ;
+			}
+		}
+	}
+	for (  i = 0  ;  i < N  ;  i ++   ) {
+		resultList [ i ] = list [ i ]  . id ;
+	}
+}

@@ -1,0 +1,41 @@
+//----------------------------------------
+executeUserInp (inp: statistics, out: results ) {
+	// create an array with five rows and name it 'results'
+	results.rows = 5;
+	//                      array 'results' has two fields 'results.rank' and 'results.max'
+	//                      initialize 'results.rank' with zero
+	for ( i=0; i<results.rows; i++) {
+		results[i].rank  = 0.000000 ;
+	}
+	//                      initialize 'results.max' with zero
+	for ( i=0; i<results.rows; i++) {
+		results[i].max  = 0.000000 ;
+	}
+	//                      in array 'statistics' find field with description free throw %  and name it 'fieldName'
+	fieldName = "FTM";
+	//                      for each row 'i' in 'statistics'
+	for( i = 0; i < lengthOf(statistics); i++ ) {
+		//                      'value' = column 'fieldName' and row 'i' in 'statistics'
+		value  = statistics[i].[fieldName] ;
+		//                      for each row 'j' in 'results'
+		for( j = 0; j < lengthOf(results); j++ ) {
+			//                      if 'value' is greater than 'results[j].max'
+			if(  value  >  results[j].max  ) {
+				//                      shift down all rows in array 'results' by one , starting at location 'j'
+				for(rowNum=lengthOf(results)-1; rowNum  >= j + 1; rowNum--) {
+					results[rowNum].rank = results[rowNum - 1].rank; 
+					results[rowNum].max = results[rowNum - 1].max; 
+				}
+				//                      set 'results.rank' at location 'j' to 'i'
+				results[j].rank  = i ;
+				//                      set 'results.max' at location 'j' to 'value'
+				results[j].max  = value ;
+				//                      break loop
+				break;
+				//                      end if
+			}
+			//                      end for each
+		}
+		//                      end for each
+	}
+}

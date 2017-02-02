@@ -1,0 +1,20 @@
+// General test for numbers, loops, and standard functions
+main  (  )     {
+    
+    alpha = 5   ;
+    beta  = alpha  * 2  + 7 ;
+    r =  ( 9 * alpha  + 5 )  * 2 +   beta ;
+    show (  "alpha = " , alpha ,  " beta = " , beta ,  " r = " , r ) ;
+    dataArray = { 3, 4, 6, 8 } ;
+    max = 0 ;
+    n = lengthOf ( dataArray ) ;
+    for ( i = 0 ; i < n ; i++ ) {
+        if ( max < dataArray [ i ] ) {
+            max = dataArray [ i ] ;
+        }
+    }
+    show ( "max =", max ) ;
+    sqrt1 = sqrt ( dataArray [ 1] );
+    show ( "Square root of ", dataArray [ 1 ], " is ", sqrt1 ) ;
+}
+

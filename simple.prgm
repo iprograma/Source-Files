@@ -1,0 +1,15 @@
+main ( ) {
+	// weather is good
+	weather = "good";
+	// if weather is good then
+	if ( weather == "good" ) {
+		// travel by bicycle
+		travel = "bicycle";
+	}
+	// else
+	else {
+		// travel by car
+		travel = "car";
+	}
+	show( "I will travel by ", travel);
+}

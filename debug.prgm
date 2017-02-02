@@ -1,0 +1,7 @@
+main  (  )     {
+    
+    alpha =  bg = 5   ;
+    beta  = alpha  * 2  + 7  + sv ;
+    r =  ( 9 * alpha  + 5 )  * 2 )      +   beta ;
+    show (  "alpha = " , alpha ,  " beta = " , beta ,  " r = " , r )    ;
+    

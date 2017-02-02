@@ -1,0 +1,124 @@
+// Program that combines data in an Excel Spreadsheet
+main () {
+    // Read and process all inventory data
+    name = "Alldata";
+    readDataFromSpreadSheet ( "DataFiles/GR.csv" , name  );
+    combineSpreadsheets ( inp: accumulate = 1, strtRecord = 0, dataIn = name, dataCur = dataOut, ShopID = 0, out: dataOut = dataOut ) ;
+    combinedDataLength = lengthOf( dataOut ) ;
+    
+    //- First read all inventory data from all stores, accumulate same products, and save them as structures
+    readDataFromSpreadSheet ( "DataFiles/GC.csv" , name    );
+    combineSpreadsheets ( inp: accumulate = 1, strtRecord = combinedDataLength, dataIn = name, dataCur = dataOut, ShopID = 1, out: dataOut = dataOut  ) ;
+    combinedDataLength = lengthOf( dataOut ) ;
+    
+    readDataFromSpreadSheet ( "DataFiles/VR.csv" , name    );
+    combineSpreadsheets ( inp: accumulate = 1, strtRecord = combinedDataLength, dataIn = name,dataCur = dataOut,  ShopID = 2, out: dataOut = dataOut  ) ;
+    combinedDataLength = lengthOf ( dataOut ) ;
+    
+    readDataFromSpreadSheet ( "DataFiles/VC.csv" , name  ) ;
+    combineSpreadsheets ( inp: accumulate = 1, strtRecord = combinedDataLength, dataIn = name, dataCur = dataOut, ShopID = 3, out: dataOut = dataOut ) ;
+    combinedDataLength = lengthOf( dataOut ) ;
+    
+    //- Create a common file using the inventory data from each store as well as the master product list to update all missing fields
+    readDataFromSpreadSheet ( "DataFiles/List.csv"  , name   );
+    combineSpreadsheets ( inp: accumulate = 0, strtRecord = combinedDataLength, dataIn = name, dataCur = dataOut, ShopID = 4, out: dataOut = dataOut ) ;
+    
+    sortRecords(inp: dataIn = dataOut , out: dataOut = dataOut);
+    
+    //- Write results to a file
+    fileResName = "MasterInventoryList.csv" ;
+    fp = fopen ( fileResName , "w" ) ;
+    writeDataToFile ( fp, "UPC1, " , "Item, " , "Descrption, " , "Price, ", "Cost, " , "Category, " , "SubCategory, " , "SubCategory2, " , "SubCategory3, " , "Vendor, " , "GR, ", "GC, ", "VR, ", "VC, ", "Total Inventory" ) ;
+    for( i=0; i< combinedDataLength; i++) {
+        invSum = dataOut[i].Quantity[0] + dataOut[i].Quantity[1] + dataOut[i].Quantity[2] + dataOut[i].Quantity[3] ;
+        if( invSum != 0 ) {
+            writeDataToFile ( fp, dataOut[i].UPC1 , " , " , dataOut[i].Item , " , " , dataOut[i].Description , " , " , dataOut[i].Price , " , " , dataOut[i].Cost , " , " ,  dataOut[i].Category , " , " ,  dataOut[i].SubCategory , " , " ,  dataOut[i].SubCategory2 , " , " ,  dataOut[i].SubCategory3 , " , " ,  dataOut[i].Vendor, " , " ,  dataOut[i].Quantity[0] , " , " ,  dataOut[i].Quantity[1] , " , " ,  dataOut[i].Quantity[2] , " , " ,  dataOut[i].Quantity[3], " , " , invSum ) ;
+        }
+    }
+    closeDataFile(fp);
+}
+// --------------------------------------------------------------------
+//- Identifies and accumulates same products in the inventory lists and combines them with the master list
+combineSpreadsheets (inp: accumulate , strtRecord , ShopID, dataIn, dataCur, out: dataOut ) {
+	size = lengthOf( dataIn ) ;
+    records = strtRecord ;
+    for( i = 0; i < records; i++) {
+        dataOut[i] = dataCur[i];
+    }
+    entriesUpdated = 0;
+    for( i=0; i < size; i++ ) {
+        
+        //- Search for existing entries
+        entryFound = 0;
+        for( j=0; j < records; j++ ) {
+            if( dataOut[j].UPC1 == dataIn[i].UPC1 ) {
+                entryFound = 1;
+                break;
+            }
+        }
+        //- Accumulate existing entries
+        if( entryFound == 1 && accumulate == 1 ) {
+            prev = dataOut[j].Quantity[ShopID];
+            dataOut[j].Quantity[ShopID] =  prev + 1;
+        }
+        //- Create new entries to the combined inventory list
+        else if( entryFound == 1 && accumulate == 0 ) {
+            dataOut[j].Cost = dataIn[i].Cost;
+            dataOut[j].Item = dataIn[i].Item;
+            l1 = dataOut[j].Description  ;
+            l2 = dataIn[i].Description ;
+            if( l2 > l1 ) {
+                dataOut[j].Description = dataIn[i].Description;
+            }
+            entriesUpdated++ ;
+        }
+        //- Create new entry to the current inventory list
+        else if( entryFound == 0 && accumulate == 1 ) {
+            dataOut[records] = dataIn[i];
+            dataOut[records].Cost = " ";
+            dataOut[records].Item = " ";
+            for( k=0; k < 4 ; k++ ) {
+                dataOut[records].Quantity[k] = 0;
+            }
+            dataOut[records].Quantity[ShopID] = 1;
+            records++;
+        }
+    }
+    show ( "Entries updated for Shop " , ShopID, ": " , records);
+}
+// --------------------------------------------------------------------
+//- Short records
+sortRecords ( inp: dataIn , out: dataOut ) {
+    size = lengthOf( dataIn ) ;
+    records = 0 ;
+    addItemToLine = 0;
+    for( i = 0 ; i < size ; i++ ) {
+        addItemToLine = 01;
+        insertInside = 0;
+        for ( j = 0 ; j < records ; j++ ) {
+            if( dataIn[i].UPC1 < dataOut[j].UPC1 ) {
+                addItemToLine = j;
+                insertInside = 1;
+                break;
+            }
+        }
+        if( insertInside == 0 ) {
+            addItemToLine = records;
+        }
+        
+        if( insertInside == 1 ) {
+            moveRecordsDown(inp: dataIn = dataOut, startingAtLocation = addItemToLine, out: dataOut = dataOut ) ;
+        }
+        dataOut[addItemToLine] = dataIn[i];
+        records++;
+    }
+}
+// --------------------------------------------------------------------
+//- Move records down
+moveRecordsDown ( inp: dataIn, startingAtLocation, out: dataOut ) {
+    size = lengthOf( dataIn ) ;
+    for( i = size ; i > startingAtLocation ; i-- ) {
+        dataOut[i] = dataIn[i-1];
+    }
+}
+

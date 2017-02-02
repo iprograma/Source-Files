@@ -1,0 +1,104 @@
+// This is a list of bugs that have been fixed
+main () {
+	errors = 0;
+    
+    // M15, M23
+	bar.x = 200;
+    bar.y = 50;
+	bar.width = 150;
+    bar.height = 10;
+    object.x = 100;
+	testComplexIf ( inp: object = object , bar = bar  , out: isInside = isInside  ) ;
+	if ( isInside == "true"  ) {
+		show ( "Test FAILED"  ) ;
+		errors = errors + 1;
+    }
+    object.x = 220;
+    testComplexIf ( inp: object = object , bar = bar  , out: isInside = isInside  ) ;
+    if ( isInside == "false"  ) {
+        show ( "Test FAILED"  ) ;
+        errors = errors + 2;
+    }
+    object.x = 370;
+    testComplexIf ( inp: object = object , bar = bar  , out: isInside = isInside  ) ;
+    if ( isInside == "true"  ) {
+        show ( "Test FAILED"  ) ;
+        errors = errors + 4;
+    }
+    
+    // M25
+    object.x = 10;
+    object.y = 80;
+    testMoreComplexIf ( inp: object = object , bar = bar  , out: isInside = isInside  ) ;
+    if ( isInside == "true"  ) {
+        show ( "Test FAILED"  ) ;
+        errors = errors + 8;
+    }
+    object.x = 210;
+    testMoreComplexIf ( inp: object = object , bar = bar  , out: isInside = isInside  ) ;
+    if ( isInside == "true"  ) {
+        show ( "Test FAILED"  ) ;
+        errors = errors + 16;
+    }
+    object.x = 400;
+    testMoreComplexIf ( inp: object = object , bar = bar  , out: isInside = isInside  ) ;
+    if ( isInside == "true"  ) {
+        show ( "Test FAILED"  ) ;
+        errors = errors + 32;
+    }
+    object.x = 10;
+    object.y = 55;
+    testMoreComplexIf ( inp: object = object , bar = bar  , out: isInside = isInside  ) ;
+    if ( isInside == "true"  ) {
+        show ( "Test FAILED"  ) ;
+        errors = errors + 64;
+    }
+    object.x = 210;
+    testMoreComplexIf ( inp: object = object , bar = bar  , out: isInside = isInside  ) ;
+    if ( isInside == "false"  ) {
+        show ( "Test FAILED"  ) ;
+        errors = errors + 128;
+    }
+    object.x = 400;
+    testMoreComplexIf ( inp: object = object , bar = bar  , out: isInside = isInside  ) ;
+    if ( isInside == "true"  ) {
+        show ( "Test FAILED"  ) ;
+        errors = errors + 256;
+    }
+
+    
+    // M8
+    bar.x = 200;
+    bar.width = 150;
+    ball.x = bar.x + bar.width / 2 ;
+    if ( ball.x != 175  ) {
+        show ( "Test FAILED"  ) ;
+        errors = errors + 512;
+    }
+    
+    if( errors != 0 ) {
+        show ("FINAL TEST FAILED: Total errors = ", errors );
+    }
+    else {
+        show ("FINAL TEST PASSED" ) ;
+    }
+}
+// test 1
+testComplexIf (inp: object , bar out: isInside  ) {
+	if ( (object.x > bar.x ) && (object.x < bar.x + bar.width)  ) {
+		isInside = "true";
+	}
+	else {
+		isInside = "false";
+	}
+    i = 0; // Dummy viable to mask probmel M28
+}
+// test 2
+testMoreComplexIf (inp: object , bar out: isInside  ) {
+    if ((object.y < (bar.y + bar.height)) && (object.x > bar.x) && (object.x < (bar.x + bar.width))) {
+        isInside = "true";
+    }
+    else {
+        isInside = "false";
+    }
+}

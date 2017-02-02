@@ -1,0 +1,95 @@
+// Misc tests
+main  (  )     {
+    
+    error = 0;
+    
+    // List of simpe mathematical operations
+    alpha =  5;
+    beta  = alpha  * 2  + 7  ;
+    r =  ( 9 * alpha  + 5 )  * 2      +   beta ;
+    show(@color=brown@, @type=bold@, "\n----- Exploring Numbers ------------------", @endcolor@, @endtype@);
+    show (  "alpha = " , alpha ,  ", beta = " , beta ,  ", r = " , r )    ;
+    
+    if( alpha != 5 || beta != 17 || r != 117 ) {
+        show("Error in calculations : ", "alpha=", alpha, " beta=", beta, " r=", r);
+        error = 1;
+    }
+    
+    // Explore structures and arrays
+    family.members = 4;
+    family.dad = "Jim";
+    family.mom = "Kate";
+    family.kid[0] = "John";
+    family.kid[1] = "Mary";
+    foodsTheyLike = {"beef", "beans", "oranges", "apples", "grapes" };
+    // This is how you can use data from structures and arrays
+    numberOfKids = lengthOf(family.kid);
+    show(@color=brown@, @type=bold@, "\n----- Exploring Structures and Arrays ------------------", @endcolor@, @endtype@);
+    // Operators apply to both types whether they are numbers of strings
+    if( family.dad == family.mom) {
+        show(family.dad, " ha");
+    }
+    else {
+        show(family.dad, " and ", family.mom, " have ", numberOfKids, " kids");
+    }
+    show("Their names are: ");
+    show(family.kid);
+    show("They like eating");
+    show(foodsTheyLike);
+    
+    if( foodsTheyLike[0] != "beef" || foodsTheyLike[1] !=  "beans" || foodsTheyLike[2] !=  "oranges" || foodsTheyLike[3] !=  "apples" || foodsTheyLike[4] !=  "grapes") {
+        show("Error in foods they like");
+        error = 1;
+    }
+    
+    if( family.kid[0] != "John" || family.kid[1] != "Mary") {
+        show("Error in family members");
+        error = 1;
+    }
+    
+    // Demonstration of function calls
+    numbers = { 10, 24, 34, 5, 9, 95, 19};
+    calculateStats( inp: dataArray = numbers, out: ave = aveNum, max = maxNum, min = minNum);
+    
+    show(@color=brown@, @type=bold@, "\n----- Exploring Functions ------------------", @endcolor@, @endtype@);
+    show(@color=red@, @type=bold@, "\nOur list of numbers is", @endcolor@, @endtype@);
+    show( numbers );
+    show(@color=blue@, @type=bold@, "\nStatistics of numbers:", @endcolor@, @endtype@);
+    show( "Max of numbers is: ", maxNum, "\nMin of numbers is: ", minNum, "\nAverage of numbers is: ", aveNum);
+    
+    if( maxNum != 95 || minNum != 5 || aveNum != 28 ) {
+        show("Error in min/max/ave calculations");
+        error = 1;
+    }
+    
+    if( error == 1 ) {
+        show("\n\nTEST FAILED\n\n");
+    }
+    else {
+        show("\n\nALL TESTS PASSED\n\n");
+    }
+    // Demnonstration of Array operations
+    //show(@color=brown@, @type=bold@, "\n----- Operations on Arrays ------------------", @endcolor@, @endtype@);
+    //offsetArray = {5, 5, 5, 3, 3, 3 , 3};
+    //newArray = numbers + offsetArray;
+    //show("NewArray = numbers + offsetArray");
+    //show(newArray, numbers, offsetArray);
+}
+//--------------------------------------------------------------------
+// Function that returns min, max, and average of an array of numbers
+calculateStats( inp: dataArray, out: ave, min, max) {
+    max = -10000;
+    min = 10000;
+    ave = 0;
+    
+    for(i=0; i< lengthOf(dataArray); i = i + 1) {
+        ave = ave + dataArray[i];
+        if ( dataArray[i] >  max ) {
+            max = dataArray[i];
+        }
+        if ( dataArray[i] < min ) {
+            min = dataArray[i];
+        }
+    }
+    ave = ave / lengthOf(dataArray);
+}

@@ -1,0 +1,67 @@
+main () {
+    pongland.x = 0;
+    pongland.y = 0;
+    pongland.w = 800;
+    pongland.h = 800;
+    angle=60;
+    createGraphics ( "monkey" , 50 , 900 , 800 , 800 , "monkey3.jpg"  ) ;
+    keyPressed = "keyPressed" ;
+    enableKeyboard ( keyPressed  ) ;
+    makeball ( inp: name = "ball" , height = 20 , width = 20 , x = 400 , y = 400 , color = "red"  , out: ball = ball  ) ;
+    //makebar ( inp: name = "bar" , x = 200 , y = pongland.y , width = 100 , height = 10 , color = "red" , pcolor = "red"  , out: newbar = bar  ) ;
+    makebar ( inp: name = "bar" , x = 200 , y = 0 , width = 100 , height = 10 , color = "red" , pcolor = "red"  , out: newbar = bar  ) ;
+    finish = "false";
+    while (            finish == "false"            ) {
+        if (  keyPressed == "a"  ) {
+            bar.x = bar.x - 5;
+        }
+        else if (  keyPressed == "d"  ) {
+            bar.x = bar.x + 5;
+        }
+        movesball ( inp: speed = 3 , angle = angle , inpObject = ball  , out: outObject = ball  ) ;
+        wall ( inp: ball = ball , inputangle = angle , wall = pongland  , out: angle = angle  ) ;
+        updateGraphics ( ball.name , "position" , ball.x , ball.y  ) ;
+        updateGraphics ( bar.name , "position" , bar.x , bar.y  ) ;
+    }
+    show ( "Program End");
+}
+makeball (inp: name , height , width , x , y , color out: ball  ) {
+    ball.x = x;
+    ball.y = y;
+    ball.w = width;
+    ball.h = height;
+    ball.name = name;
+    createCircularObject ( name , x , y , width , height , "CENTER" , color , color  ) ;
+}
+makebar (inp: name , x , y , width , height , color , pcolor out: newbar  ) {
+    newbar.x = x;
+    newbar.y = y;
+    newbar.w = width;
+    newbar.h = height;
+    newbar.name = name;
+    createRectangularObject ( name , x , y , width , height , "CENTER" , color , pcolor  ) ;
+}
+movesball (inp: speed , angle , inpObject out: outObject  ) {
+    pi = 3.14159;
+    anglepi=pi*angle/180;
+    agl.x = speed * cos ( anglepi ) ;
+    agl.y = speed * sin ( anglepi ) ;
+    outObject.x = inpObject.x + agl.x;
+    outObject.y = inpObject.y + agl.y;
+    outObject.w = inpObject.w;
+    outObject.h = inpObject.h;
+}
+wall (inp: ball , inputangle , wall out: angle  ) {
+    if (        ball.y>=wall.y+wall.h        ) {
+        angle=360-inputangle;
+    }
+    else if (       ball.x<=wall.x       ) {
+        angle=180-inputangle;
+    }
+    else if (      ball.x >=wall.x+wall.w      ) {
+        angle=180-inputangle;
+    }
+    else if (      ball.y<=wall.y      ) {
+        angle=360-inputangle;
+    }
+}

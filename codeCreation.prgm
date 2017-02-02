@@ -1,0 +1,151 @@
+// Program to explore statistics
+main () {
+    
+    error = 0;
+    
+    readAndAnalyzeDataFromFile ( "NCAAStats.txt", statistics ) ;
+    
+    // read and analyze data from file 'NCAAStats.txt' and store data to array 'statistics'
+
+    analyzeUserInput(statistics,
+                     "create an array with five rows and name it 'results'
+                     array 'results' has two fields 'results.rank' and 'results.max'
+                     initialize 'results.rank' with zero
+                     initialize 'results.max' with zero
+                     in array 'statistics' find field with description free throw %  and name it 'fieldName'
+                     for each row 'i' in 'statistics'
+                     'value' = column 'fieldName' and row 'i' in 'statistics'
+                     for each row 'j' in 'results'
+                     if 'value' is greater than 'results[j].max'
+                     shift down all rows in array 'results' by one , starting at location 'j'
+                     set 'results.rank' at location 'j' to 'i'
+                     set 'results.max' at location 'j' to 'value'
+                     break loop
+                     end if
+                     end for each
+                     end for each",
+                    results);
+    
+    for(i=0; i<lengthOf(results); i++) {
+        resultsRank[i] = results[i].rank;
+        resultsPerc[i] = results[i].max;
+    }
+    returnFieldValue( inp: dataArray=statistics, list=resultsRank, outField="TEAM", out: name=resultNames);
+    
+    show("Results");
+    show(results[0].max, "\n", results[1].max, "\n", results[2].max, "\n", results[3].max, "\n", results[4].max);
+    show("Ranks");
+    show(results[0].rank, "\n", results[1].rank, "\n", results[2].rank, "\n", results[3].rank, "\n", results[4].rank);
+    
+    if(results[0].max != 765 || results[1].max != 707 ||  results[2].max != 693 ||  results[3].max != 680 || results[4].max != 675) {
+        show("\n\nERROR: in code conversion\n\n");
+        error = 1;
+    }
+    else {
+        show("\n\nTEST PASSED\n\n");
+    }
+    show(@color=red@, @type=italics@, "Top teams with the highest free-throw percentage", @endcolor@, @endtype@);
+    show(@color=blue@, resultNames, @endcolor@, @color=brown@, resultsPerc, @endcolor@);
+    
+    if( error == 1 ) {
+        show("\n\nTEST FAILED\n\n");
+    }
+    else {
+        show("\n\nTEST PASSED\n\n");
+    }
+    
+}
+// -------------------------------------------------
+// Description: Search for name and return string
+SearchForNameAndReturnField( inp: dataArray, valueToFind, out: outField) {
+    found = 0;
+    if( isNumber(valueToFind) ) {
+        nameType = "N";
+    }
+    else {
+        nameType = "T";
+    }
+    
+    for( j=0; j<dataArray.numFields; j++) {
+        if( nameType == dataArray.field[j].type ) {
+            field = dataArray.field[j].name;
+            for(i=0; i<lengthOf(dataArray); i = i+1) {
+                if( dataArray[i].[field] == valueToFind ) {
+                    outField = field;
+                    found = 1;
+                    break; // i = lengthOf(dataArray); // break
+                    //j = dataArray.numFields; // break
+                }
+            }
+            if( found == 1 ) {
+                break;
+            }
+        }
+    }
+    if( found == 0 ) {
+        outName = "Not found";
+    }
+}
+// -------------------------------------------------
+// Description: Find name in field
+SearchForNameInFieldAndReturnValue( inp: dataArray, field, name, outField, out: outName) {
+    found = 0;
+    for(i=0; i<lengthOf(dataArray); i++) {
+        if( dataArray[i].[field] == name ) {
+            outName = dataArray[i].[outField];
+            found = 1;
+            i = lengthOf(dataArray); // break
+        }
+    }
+    if( found == 0 ) {
+        outName = "Not found";
+    }
+}
+// -----------------------------------------------------------
+// Description: Return value of a field
+returnFieldValue( inp: dataArray, list, outField, out: name) {
+    
+    //show("Field is ", outField, " with value ");
+    for(i=0; i<lengthOf(list); i++) {
+        num = list[i];
+        //show("Field is ", outField);
+        name[i] = dataArray[num].[outField];
+    }
+}
+
+// ------------------------------------------------------------
+// Description: search array
+findTopN( inp: dataArray, N, type, fieldCheck, out: resultList) {
+    
+    for(i=0; i<N; i++) {
+        if( type == "max" ) {
+            list[i].num = N_INFINITY;
+        }
+        else {
+            list[i].num = P_INFINITY;
+        }
+        list[i].id = 0;
+    }
+    
+    dataLength = lengthOf(dataArray);
+    for(i=0; i< dataLength; i++) {
+        num  = dataArray[i].[fieldCheck];
+        for(j=0; j<N; j++) {
+            compResult = num - list[j].num;
+            if ( type == "max" && compResult >= 0 || type == "min" && compResult < 0) {
+                for(k=N-1; k >= j + 1 ; k-- ) {
+                    list[k].id  = list[k-1].id;
+                    list[k].num = list[k-1].num;
+                }
+                list[j].num = num;
+                list[j].id = i;
+                break;
+            }					
+        }
+    }
+    
+    for(i=0; i<N; i++) {
+        resultList[i] = list[i].id;
+    }
+}
+

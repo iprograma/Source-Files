@@ -1,0 +1,92 @@
+// Mission to Mars with Programa
+main () {
+	// Constants
+	pi = 3.14159;
+	// Graphics window
+	frame.x = 0;
+	frame.y = 0;
+	frame.w = 600;
+	frame.h = 600;
+    
+	createGraphics ( "Understanding Integrals" , 50 , 900 , frame.w , frame.h , "black"  ) ;
+	//createActionButton ( 50 , 450 , 80 , 30 , "CENTER" , "blue" , "black" , "white" , "Arial:12" , "Start" , "startButtonClicked"  ) ;
+	createActionButton ( 150 , 550 , 80 , 30 , "CENTER" , "blue" , "black" , "white" , "Arial:12" , "Next" , "nextButtonClicked"  ) ;
+    
+    origin.x = 30;
+    origin.y = 30;
+    createArrow ( "xAxis" , origin.x , origin.y , 300 , 3 , "red" , "red" , 0  ) ;
+    createArrow ( "yAxis" , origin.x , origin.y , 300, 3 , "red" , "red" , 90  ) ;
+    
+	s = "apprx" ;
+    Start = "true";
+    nextButtonClicked = "false";
+    step = 20 ;
+    totalArea = 0;
+    strt = 1;
+    stop =200;
+    for( i = 0; i < stop ; i++ ) {
+        x[i] = i;
+        y[i] = 2 * i;
+    }
+    textTitle = "textTitle";
+    title = "integral ( 2 * x * dx ) for x = 200 is x ^ 2 = 40000";
+    insertText(textTitle, 50, 500, 400, 40, "LOWER_LEFT", "clear", "clear", "green", "arial:18", "CENTER", title ) ;
+    
+    stepLabel = "stepLabel";
+    string( stepText, "dx = ", step);
+    insertText(stepLabel, 300, 400, 100, 40, "LOWER_LEFT", "clear", "clear", "yellow", "arial:18", "CENTER", stepText ) ;
+    
+    reslultLabel = "resultLabel";
+    string( textResult, "approximation = ", 0);
+    insertText(reslultLabel, 200, 300, 400, 40, "LOWER_LEFT", "clear", "clear", "blue", "arial:20", "CENTER", textResult ) ;
+    
+    apprxCreated = "false";
+    while ( Start == "true" ) {
+        if ( nextButtonClicked == "true" ) {
+            if( apprxCreated == "true" ) {
+                for( i = strt; i < stop ; i++ ) {
+                    string (s, "apprx[", i, "]");
+                    deleteObject ( s ) ;
+                }
+                step = step / 2;
+                string( stepText, "dx = ", step);
+                updateGraphics( stepLabel, "text", stepText ) ;
+            }
+            for( i = strt; i < stop ; i = i + 3 ) {
+                xi = x[i];
+                yi = y[i];
+                string (s, "time[", xi, "]");
+                makeLine (inp: name = s, origin = origin, x = xi , y = yi ) ;
+            }
+            
+            totalArea = 0;
+            for( i = strt; i < stop ; i = i + step ) {
+                xi = x[i];
+                yi = y[i];
+                string (s, "apprx[", xi, "]");
+                makeArea (inp: name = s, origin = origin, x = xi , y = yi, width = step ) ;
+                totalArea = totalArea + yi * step;
+            }
+            show ( "Total Area = ", totalArea) ;
+            string( textResult, "approximation = ", totalArea);
+            updateGraphics( reslultLabel, "text", textResult ) ;
+            apprxCreated = "true";
+            nextButtonClicked = "false";
+        }
+    }
+    show("program finished");
+}
+// Definition of area
+makeArea (inp: name , origin, x , y , width  ) {
+    nx = origin.x + x;
+    ny = origin.y;
+	createRectangularObject ( name , nx , ny , width , y , "LOWER_LEFT" , "red" , "blue" ) ;
+}
+// Trace trajectory
+makeLine (inp: name, origin, x , y  ) {
+    //s = "timeStamp"
+    //string (s, "time", xValue);
+    nx = origin.x + x;
+    ny = origin.y + y;
+    createRectangularObject ( name , nx , ny , 2 , 2 , "CENTER" , "red" , "red"  ) ;
+}

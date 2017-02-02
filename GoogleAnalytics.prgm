@@ -1,0 +1,5 @@
+// Analytics Demo
+main ( ) {
+	readDataFromSpreadSheet ( "GoogleAnalytics.csv" );
+	show( Country, Sessions, PercentNewSessions, NewUsers, BounceRate, PagesPerSession, AvgSessionDuration, Transactions, Revenue, EcommerceConversionRate );
+}

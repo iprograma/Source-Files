@@ -1,0 +1,65 @@
+// Program to create a house that you can built using a 3D printer
+main () {
+    
+    house.color.red   = 128;
+    house.color.green = 128;
+    house.color.blue  = 128;
+    red = {255, 50, 50};
+    blue = {50, 100, 200};
+    brown = {50, 200, 200};
+    house.floors = 3;
+    house.length = 400;
+    house.depth = 500;
+    house.height = 100;
+    
+    windows.size.width = 30;
+    windows.size.height = 50;
+    windows.distance = 130;
+    windows.distanceFromFloor = 30;
+    windows.startDistance = 40;
+    windows.number = 4;
+    windows.color.red = 50;
+    windows.color.green = 50;
+    windows.color.blue = 200;
+    
+    door.height = 60;
+    door.width = 60;
+    door.color.red = 200;
+    door.color.green = 50;
+    door.color.blue = 200;
+    halfDoorWidth = door.width / 2;
+    
+    roof.color.red = 200;
+    roof.color.green = 50;
+    roof.color.blue = 50;
+  
+    floor.height = 0;
+    
+    for ( floor = 0 ; floor < house.floors ; floor ++  ) {
+        
+        create3DCube ( inp: name="floor", x=0, y=0, z=floor.height, w=house.height, d=house.depth, h=house.length, color=house.color, texture="111111" ) ;
+        
+        if ( floor == 0 ) {
+            doorPosition = house.depth / 2 - halfDoorWidth;
+            create3DCube ( inp: name="door", x=doorPosition, y=-10, z=0, w=door.height, d=door.width, h=10, color=door.color, texture="111111" ) ;
+            //create3DRect (inp : orientation="front", x = 0, y=0 , z=doorPosition, w = door.width , h = door.height, operation="CUT");
+        }
+        xwin = windows.startDistance;
+        for ( window = 0 ; window < windows.number ; window ++  ) {
+            ywin = windows.distanceFromFloor+floor.height;
+            create3DCube ( inp: name="window", x=xwin, y=-10, z=ywin, w=windows.size.height, d=windows.size.width, h=10, color=windows.color, texture="111111" ) ;
+            //create3DRect (inp : orientation="front", x = xwin, y=ywin, z=zofw, w = windows.size.width , h = windows.size.height, operation="CUT");
+            xwin = xwin + windows.distance;
+        }
+        
+        floor.height = floor.height + house.height;
+    }
+    create3DPyramid ( inp: name="Pyr",  x=0, z=floor.height, y=0, w=house.depth, d=house.length, h = 150, color=roof.color ) ;
+
+    
+    //create3DObject("houseA.stl", "STL_Ascii" );
+    create3DObject("house.stl", "STL_Binary" );
+}
+
+
+

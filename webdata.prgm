@@ -1,0 +1,5 @@
+// Reads data from a web file
+main ( ) {
+	readDataFromSpreadSheet ( "GoogleAnalytics.csv"  ) ;
+    show ( Country , NewUsers , BounceRate, AvgSessionDuration);
+}

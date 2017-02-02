@@ -1,0 +1,87 @@
+// This is a program that tests simple if loops
+main ( ) {
+    error = 0;
+    
+    accumulateTest = "undefined";
+    entryFoundTest = "undefined";
+    entryFound = 1;
+    accumulate = "true";
+    testIFcombinations ( inp: entryFound = entryFound, accumulate = accumulate, out: entryFoundTest = entryFoundTest, accumulateTest = accumulateTest ) ;
+    if( entryFoundTest != "one" || accumulateTest != "true" ) {
+        show ( "ERROR for First IF test" ) ;
+        show ( "Got: ", entryFoundTest, "/", accumulateTest, " instead of: one/true" ) ;
+        error = 1;
+    }
+    else {
+        show ("PASS 1");
+    }
+    
+    accumulateTest = "undefined";
+    entryFoundTest = "undefined";
+    entryFound = 1;
+    accumulate = "false";
+    testIFcombinations ( inp: entryFound = entryFound, accumulate = accumulate, out: entryFoundTest = entryFoundTest, accumulateTest = accumulateTest ) ;
+    if( entryFoundTest != "one" || accumulateTest != "false" ) {
+        show ( "ERROR for Second IF test" ) ;
+        show ( "Got: ", entryFoundTest, "/", accumulateTest, " instead of: one/false" ) ;
+        error = 1;
+    }
+    else {
+        show ("PASS 2");
+    }
+    
+    accumulateTest = "undefined";
+    entryFoundTest = "undefined";
+    entryFound = 2;
+    accumulate = "true";
+    testIFcombinations ( inp: entryFound = entryFound, accumulate = accumulate, out: entryFoundTest = entryFoundTest, accumulateTest = accumulateTest ) ;
+    if( entryFoundTest != "two" || accumulateTest != "undefined" ) {
+        show ( "ERROR for Third IF test" ) ;
+        show ( "Got: ", entryFoundTest, "/", accumulateTest, " instead of: two/undefined" ) ;
+        error = 1;
+    }
+    else {
+        show ("PASS 3");
+    }
+    
+    accumulateTest = "undefined";
+    entryFoundTest = "undefined";
+    entryFound = 5;
+    accumulate = "true";
+    testIFcombinations ( inp: entryFound = entryFound, accumulate = accumulate, out: entryFoundTest = entryFoundTest, accumulateTest = accumulateTest ) ;
+    if( entryFoundTest != "other" || accumulateTest != "undefined" ) {
+        show ( "ERROR for Fourth IF test" ) ;
+        show ( "Got: ", entryFoundTest, "/", accumulateTest, " instead of: other/undefined" ) ;
+        error = 1;
+    }
+    else {
+        show ("PASS 4");
+    }
+    
+    if( error == 0 ) {
+        show("ALL TESTS PASSED");
+    }
+    else {
+        show("TESTS FAILED");
+    }
+}
+//------------------------------------------------------
+testIFcombinations ( inp: entryFound, accumulate, out: entryFoundTest, accumulateTest ) {
+    entryFoundTest = "undefined";
+    accumulateTest = "undefined";
+    if( entryFound == 1 ) {
+        entryFoundTest = "one";
+        if ( accumulate == "true" ) {
+            accumulateTest = "true";
+        }
+        else {
+            accumulateTest = "false";
+        }
+    }
+    else if( entryFound == 2 ) {
+        entryFoundTest = "two";
+    }
+    else {
+        entryFoundTest = "other";
+    }
+}

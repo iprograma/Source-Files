@@ -1,0 +1,302 @@
+// Program to show how to create 3D Models
+main () {
+    
+    //color.red   = 128;
+    //color.green = 128;
+    //color.blue  = 128;
+    
+    //triangleColor = color;
+    //triangleColor.green = 200;
+  
+
+    
+    bw = 40;  // acutal heigh
+    bd = 80;  // actual width
+    bh = 60; // actual depth
+    ww = 10;
+    wh = 20;
+    of = 10;
+    op = 2*ww + 3*of;
+    //op = 2*ww + 3*of;
+    //bd = 20 * op;
+    //bh = 10 * op;
+    //bw = wh + 2*of;
+    //frontBackWindows = 20;
+    //sideWindows = 10;
+    
+    //create3DCube( inp: name="Cube1", x= 0, y=0, z=0, w=bw, d=bd, h=bh, texture="222222");
+    //create3DCube( inp: name="Cube2", x=bd, y=0, z=0, w=bh, d=bd, h=bw, texture="000010");
+    //groupAndCopy(inp: group="cube3", "Cube1", "Cube2");
+    //xDisp = 0;
+    //yDisp = 200;
+    //moveAndRotateGroup( inp: group="cube3", y=yDisp, x=xDisp, zAngle=180);
+    
+    // Main entrance levels with 5 floors
+    createFloor(inp: x=0, y=0, z=0, floors=5, numOfFrontWindows=20, numOfSideWindows=15, texture="222201", name="entranceLevel", out: t0=top0, t1=top1, t2=top2, t3=top3);
+    
+    // Core block that goes to the top
+    xCoreWin = 3;
+    yCoreWin = 7;
+    xCenter = (top0.x + top1.x + top2.x + top3.x)/4 - xCoreWin*op/2;
+    yCenter = (top0.y + top1.y + top2.y + top3.y)/4 - yCoreWin*op/2;
+    createFloor(inp: x=xCenter, y=yCenter, z=top0.z, floors=100, numOfFrontWindows=xCoreWin, numOfSideWindows=yCoreWin, texture="221101", name="centerCore", out: t0=core0, t1=core1, t2=core2, t3=core3);
+    
+    // Right side cover of core tower
+    xSideCoreWin = 3;
+    ySideCoreWin = 9;
+    xStart = core3.x;
+    yStart = core3.y - (ySideCoreWin - yCoreWin)*op/2;
+    createFloor(inp: x=xStart, y=yStart, z=top0.z, floors=100, numOfFrontWindows=xSideCoreWin, numOfSideWindows=ySideCoreWin, texture="221201", name="rightCore", out: t0=rs0, t1=rs1, t2=rs2, t3=rs3);
+
+    // Lower cover part of right side cover
+    xSideCoreCoverWin = 1;
+    ySideCoreCoverWin = 7;
+    xStart = rs3.x;
+    yStart = rs3.y + (ySideCoreWin - ySideCoreCoverWin)*op/2;
+    createFloor(inp: x=xStart, y=yStart, z=top0.z, floors=25, numOfFrontWindows=xSideCoreCoverWin, numOfSideWindows=ySideCoreCoverWin, texture="221201", name="rightCoreCover", out: t0=rsc0, t1=rsc1, t2=rsc2, t3=rsc3);
+
+    // right front corner - front part
+    xSideCoreCoverWin = 5;
+    ySideCoreCoverWin = 2;
+    xStart = rs3.x - op*(xSideCoreCoverWin - ySideCoreCoverWin);
+    yStart = rs3.y - ySideCoreCoverWin*op;
+    createFloor(inp: x=xStart, y=yStart, z=top0.z, floors=20, numOfFrontWindows=xSideCoreCoverWin, numOfSideWindows=ySideCoreCoverWin, texture="202211", name="rightFrontCornerCoverLevel", out: t0=rscf0, t1=rscf1, t2=rscf2, t3=rscf3);
+    
+    // right front corner - side part
+    xSideCoreCoverWin = 2;
+    ySideCoreCoverWin = 3;
+    xStart = rs3.x;
+    yStart = rs3.y;
+    createFloor(inp: x=xStart, y=yStart, z=top0.z, floors=20, numOfFrontWindows=xSideCoreCoverWin, numOfSideWindows=ySideCoreCoverWin, texture="220211", name="rightSideCornerCoverLevel", out: t0=rscs0, t1=rscs1, t2=rscs2, t3=rscs3);
+    
+    // Back right corner
+    groupAndCopy(inp: group="corner", "rightFrontCornerCoverLevel", "rightSideCornerCoverLevel");
+    xDisp = rscf3.x + (rscf1.y - rscf0.y)/2;
+    yDisp = (rscf0.x - rscf3.x)/2;
+    moveAndRotateGroup( inp: group="corner", y=yDisp, x=xDisp, zAngle=90);
+    
+    // Entire right side
+    groupAndCopy(inp: group="fullSide", "rightFrontCornerCoverLevel", "rightSideCornerCoverLevel", "corner", "rightCoreCover", "rightCore");
+    xDisp = core0.x + 2*(rs3.x -rs0.x) + (rscf3.x -rscf0.x) + (rscf1.y -rscf0.y)/6;
+    yDisp = core0.y + (rs1.y -rs0.y) + (rscf1.y -rscf0.y);
+    moveAndRotateGroup( inp: group="fullSide", y=yDisp, x=xDisp, zAngle=180);
+    
+    
+    // Top Core
+    xCoreWin = 3;
+    yCoreWin = 7;
+    x0 = core0.x;
+    y0 = core0.y;
+    z0 = core0.z;
+    createFloor(inp: x=x0, y=y0, z=z0, floors=9, numOfFrontWindows=xCoreWin, numOfSideWindows=yCoreWin, texture="221101", name="centerTopCore", out: t0=coreTop0, t1=coreTop1, t2=coreTop2, t3=coreTop3);
+
+    // Top Right side cover of core tower
+    xSideCoreWin = 2;
+    ySideCoreWin = 9;
+    x0 = coreTop3.x;
+    y0 = core3.y - op;
+    z0 = core0.z;
+    createFloor(inp: x=x0, y=y0, z=z0, floors=9, numOfFrontWindows=xSideCoreWin, numOfSideWindows=ySideCoreWin, texture="220201", name="rightTopCore", out: t0=rts0, t1=rts1, t2=rts2, t3=rts3);
+
+    // Top left side cover of core tower
+    xSideCoreWin = 2;
+    ySideCoreWin = 9;
+    x0 = core0.x - op * xSideCoreWin;
+    y0 = core0.y - op ;
+    createFloor(inp: x=x0, y=y0, z=z0, floors=9, numOfFrontWindows=xSideCoreWin, numOfSideWindows=ySideCoreWin, texture="222001", name="leftTopCore", out: t0=lts0, t1=lts1, t2=lts2, t3=lts3);
+    
+
+    // Top top of core tower
+    xSideCoreWin = 5;
+    ySideCoreWin = 5;
+    x0 = coreTop0.x - op;
+    y0 = coreTop0.y;
+    z0 = coreTop0.z;
+    createFloor(inp: x=x0, y=y0, z=z0, floors=4, numOfFrontWindows=xSideCoreWin, numOfSideWindows=ySideCoreWin, texture="222222", name="leftTopCore", out: t0=tt0, t1=tt1, t2=tt2, t3=tt3);
+    
+    // rooftop
+    topx = tt3.x - tt0.x;
+    topy = tt1.y - tt0.y;
+    x0 = tt0.x;
+    y0 = tt0.y;
+    z0 = tt0.z;
+    dh = 30;
+    create3DCube( inp: name="roof", x=x0, y=y0, z=z0, w=dh, d=topx, h=topy, texture="111111");
+    
+    // rooftopA
+    xSideCoreWin = 4;
+    ySideCoreWin = 4;
+    x0 = tt0.x + op/2;
+    y0 = tt0.y + op/2;
+    z0 = tt0.z + dh;
+    createFloor(inp: x=x0, y=y0, z=z0, floors=1, numOfFrontWindows=xSideCoreWin, numOfSideWindows=ySideCoreWin, texture="222211", name="roofTopA", out: t0=rta0, t1=rta1, t2=rta2, t3=rta3);
+    
+
+    // rooftopB
+    xSideCoreWin = 3;
+    ySideCoreWin = 3;
+    x0 = rta0.x + op/2;
+    y0 = rta0.y + op/2;
+    z0 = rta0.z;
+    createFloor(inp: x=x0, y=y0, z=z0, floors=1, numOfFrontWindows=xSideCoreWin, numOfSideWindows=ySideCoreWin, texture="222211", name="roofTopA", out: t0=rtb0, t1=rtb1, t2=rtb2, t3=rtb3);
+    
+
+    // Pyramid
+    x0 = rtb0.x;
+    y0 = rtb0.y;
+    z0 = rtb0.z;
+    dx = rtb3.x - rtb0.x;
+    dy = rtb1.y - rtb0.y;
+    ph = 80;
+    pa = 60;
+    create3DPyramid( inp: name="pyr",  x=x0, y=y0, z=z0, w=dx, d=dx, h = ph, angle=pa );
+
+
+    // tower
+    d = 50;
+    x0 = x0 + d;
+    y0 = y0 + d;
+    z0 = rtb0.z+ph;
+    dx = rtb3.x - rtb0.x - 2*d;
+    dy = rtb1.y - rtb0.y - 2*d;
+    ph = 150;
+    create3DCube( inp: name="towerBottom", x=x0, y=y0, z=z0, w=ph, d=dx, h=dy, texture="111111");
+
+    // tower observatory
+    d = 30;
+    x0 = x0 - d/2;
+    y0 = y0 - d;
+    z0 = z0+ph;
+    dx = rtb3.x - rtb0.x - 2*d;
+    dy = rtb1.y - rtb0.y - 2*d;
+    ph = 80;
+    create3DCube( inp: name="towerObs", x=x0, y=y0, z=z0, w=ph, d=dx, h=dy, texture="111111");
+    
+    // tower top
+    ddx = dx/4;
+    ddy = dy/4;
+    x0 = x0 + dx/2 - ddx/2;
+    y0 = y0 + dy/2 - ddy/2;
+    z0 = z0 + ph;
+    ph = 200;
+    create3DPyramid( inp: name="pyrTop",  x=x0, y=y0, z=z0, w=ddx, d=ddy, h=ph );
+    
+    
+#if 0
+
+    show("core",core0.x,",",core0.y," ",core1.x,",",core1.y," ",core2.x,",",core2.y," ",core3.x,",",core3.y);
+    show("ls",ls0.x,",",ls0.y," ",ls1.x,",",ls1.y," ",ls2.x,",",ls2.y," ",ls3.x,",",ls3.y);
+    show("rs",rs0.x,",",rs0.y," ",rs1.x,",",rs1.y," ",rs2.x,",",rs2.y," ",rs3.x,",",rs3.y);
+    show("rsc",rsc0.x,",",rsc0.y," ",rsc1.x,",",rsc1.y," ",rsc2.x,",",rsc2.y," ",rsc3.x,",",rsc3.y);
+    show("rscf",rscf0.x,",",rscf0.y," ",rscf1.x,",",rscf1.y," ",rscf2.x,",",rscf2.y," ",rscf3.x,",",rscf3.y);
+    show("rscs",rscs0.x,",",rscs0.y," ",rscs1.x,",",rscs1.y," ",rscs2.x,",",rscs2.y," ",rscs3.x,",",rscs3.y);
+    
+    for ( floor = 0 ; floor < 5 ; floor ++  ) {
+        create3DCube( inp: name="Cube"     , operation="nonSolid", x=200, y=20, z=200, w=bw, d=bd, h=bh);
+        for ( window = 0 ; window < 20 ; window ++  ) {
+            winOffset = of + window*(ww+of);
+            zoffset = bz + of;
+            create3DRect (  inp : orientation =  "front" , x = winOffset, y = by , z = zoffset , w = ww , h = wh, operation="CUT"  )  ;
+            create3DRect (  inp : orientation =  "front" , x = winOffset, y = by , z = zoffset , w = ww , h = wh, operation="CUT"  )  ;
+        }
+        bz = bz + bw;
+    }
+
+    topFloor = bz;
+    roofColor = 250 << 16 | 50 << 8 | 50;
+    roofHeight = 50;
+    topOfRoof = topFloor + roofHeight;
+    roofAngle = 45;
+    p0.x = 0;
+    p0.y = 0;
+    p0.z = topFloor;
+    p2.x = bd;
+    p2.y = 0;
+    p2.z = topFloor;
+    create3DTriangle ( inp:  name="front", p0=p0, h=roofHeight, yAngle=roofAngle, p2=p2, color=roofColor, out: triangle=pf);
+    p0.x = 0;
+    p0.y = pf[1].y;
+    p0.z = topFloor;
+    create3DTriangle ( inp:  name="frontLside", p0=p0, p1=pf[1], p2=pf[0], color=roofColor, out: triangle=pfls);
+    p0.x = bd;
+    p0.y = 0;
+    p0.z = topFloor;
+    p2.x = bd;
+    p2.y = pf[1].y;
+    p2.z = topFloor;
+    create3DTriangle ( inp :  name="frontRside", p0=p0, p1=pf[1], p2=p2, color=roofColor, out: triangle=prls);
+
+    groupAndCopy(inp: group="roofView", "front", "frontLside", "frontRside");
+    d = bh;
+    moveAndRotateGroup( inp: group="roofView", y=d, x=bd, zAngle=180);
+    p1.x = pf[0].x;
+    p1.y = bh-pf[1].y;
+    p1.z = pf[0].z;
+    p2.x = pf[1].x;
+    p2.y = bh-pf[1].y;
+    p2.z = pf[1].z;
+    create3DRect (  inp: name="leftRoof" , p0 = pfls[0], p1 = p1, p2 = p2, p3 = pf[1]);
+    p1.x = pf[2].x;
+    //p1.y = bh-pf[1].y;
+    p1.z = pf[2].z;
+    create3DRect (  inp: name="rightRoof", p0 = prls[2], p1 = p1, p2 = p2, p3 = pf[1]);
+    
+#endif
+    //create3DObject("model.stl", "STL_Ascii" );
+    create3DObject("model_esb.stl", "STL_Binary" );
+
+}
+//---------------------------------------------------
+createFloor(inp: x, y, z, floors, numOfFrontWindows, numOfSideWindows, texture, name, out: t0, t1, t2, t3) {
+    
+    ww = 10;
+    wh = 20;
+    of = 10;
+    op = 2*ww + 3*of;
+    bd = numOfFrontWindows * op;
+    bh = numOfSideWindows * op;
+    bw = wh + 2*of;
+    zof = z + of;
+    
+    show(name, " : ", " ,op= ", op, " ,bd= ", bd, " ,bh= ", bh, " ,bw= ", bw, " ,zof= ", zof);
+    
+    for( floor = 0; floor < floors; floor++) {
+        create3DCube( inp: name=name, x=x, y=y, z=zof, w=bw, d=bd, h=bh, texture=texture);
+        zofw = zof + of;
+        //show("\nFloor: ", floor, "\n");
+        for ( window = 0 ; window < numOfFrontWindows ; window ++  ) {
+            //show("HWin: ", window);
+            LwinOffset = of + window * op + x;
+            RwinOffset = LwinOffset + 2*of + x;
+            yOffset = y + bh;
+            create3DRect (inp : orientation="front", x = LwinOffset, y=      y, z=zofw, w = wh , h = ww, operation="CUT");
+            create3DRect (inp : orientation="front", x = RwinOffset, y=      y, z=zofw, w = wh , h = ww, operation="CUT");
+            create3DRect (inp : orientation="back" , x = LwinOffset, y=yOffset, z=zofw, w = wh , h = ww, operation="CUT");
+            create3DRect (inp : orientation="back" , x = RwinOffset, y=yOffset, z=zofw, w = wh , h = ww, operation="CUT");
+        }
+        for ( window = 0 ; window < numOfSideWindows ; window ++  ) {
+            //show("SWin: ", window);
+            LwinOffset = of + window * op + y;
+            RwinOffset = LwinOffset + 2*of + y;
+            xOffset = x + bd;
+            create3DRect (inp : orientation="left" , x =       x, y= LwinOffset, z=zofw, w = wh , h = ww, operation="CUT");
+            create3DRect (inp : orientation="left" , x =       x, y= RwinOffset, z=zofw, w = wh , h = ww, operation="CUT");
+            create3DRect (inp : orientation="right", x = xOffset, y=LwinOffset, z=zofw, w = wh , h = ww, operation="CUT");
+            create3DRect (inp : orientation="right", x = xOffset, y=RwinOffset, z=zofw, w = wh , h = ww, operation="CUT");
+        }
+        zof = zof + bw;
+    }
+    t0.x = x;
+    t0.y = y;
+    t0.z = zof;
+    t1.x = x;
+    t1.y = y+bh;
+    t1.z = zof;
+    t2.x = x+bd;
+    t2.y = y+bh;
+    t2.z = zof;
+    t3.x = x+bd;
+    t3.y = y;
+    t3.z = zof;
+    
+}

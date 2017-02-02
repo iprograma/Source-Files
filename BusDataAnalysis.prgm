@@ -1,0 +1,85 @@
+// Analytics Demo
+main () {
+    //- Create a string variable for the target months for a year
+	for (  i = 0  ;  i < 12  ;  i ++  ) {
+		j = i + 1;
+		string ( name, "Month[", i, "]" );
+		year = 2016;
+		if (  i < 9  ) {
+			string ( month , "0" , j  ) ;
+		}
+		else {
+			string ( month , j  ) ;
+		}
+		//- Send a POST HTTPS request to the web server that has the sales reports
+		post ( inp: month = month , year = year  , out: postMessage = postMessage  ) ;
+		name = https ( "https://iprograma/test/analytics" , "admin" , "*****" , postMessage  ) ;
+        string ( fname, "DataFiles/Analytics", year, month , ".csv" );
+		readDataFromSpreadSheet ( fname , name  ) ;
+	}
+	//- Find top countries with most recent sales
+	for (  i = 0  ;  i < 10   ;  i ++   ) {
+		country[i]  =  Month[11][i].Country ;
+		revenue[i][11]  =  Month[11][i].Revenue ;
+		cummDelta[i] = 0 ;
+	}
+	//- Find sales entries of top counties from each month
+	delta = 0;
+	for (  i = 0  ;  i < 11   ;  i ++   ) {
+		for (  j = 0  ;  j < 10  ;  j ++  ) {
+			revenue[j][i] = 0;
+			// Find country in list
+			for (  k = 0  ;  k < 25  ;  k ++  ) {
+				if (  country[j] == Month[i][k].Country   ) {
+					revenue[j][i] = Month[i][k].Revenue ;
+					break;
+				}
+			}
+			//- Calculate a standard deviation of each sales territory
+			if (  i > 0  ) {
+				delta = revenue[j][i] - prevMonthRev[j]  ;
+				deltaAbs = abs ( delta  ) ;
+				cummDelta[j] = cummDelta[j]  + deltaAbs ;
+				deviation[j] = cummDelta[j] / i ;
+			}
+			//- Check to see whether there was an unpredictable change in revenue
+			if (  i > 5  ) {
+				alertLevel = 2 * deviation[j];
+				if (  deltaAbs > alertLevel  ) {
+					rev = revenue[j][i] ;
+					prev = prevMonthRev[j] ;
+					if (  prev == 0  ) {
+						string ( percentChange , "inf+"  ) ;
+					}
+					else {
+						percentChangeNum = 100 * ( rev - prev ) / prev ;
+						string ( percentChange , percentChangeNum  ) ;
+					}
+                    //- Send email notifications for any unexpected change in sales
+					if (  delta < 0  ) {
+                        string( decliningSalesMessage, "Country " , country[j] , " experienced high loss of revenue \n" , delta , " (" , percentChange , "% ) " , " in month " , i , "\n\n"  ) ;
+                        sendEmail ( inp: to = "manager@company.com\n" , subject = "Sales down" , message = decliningSalesMessage);
+					}
+					else {
+                        string( increasingSalesMessage, "Country " , country[j] , " has high gain of revenue \n" , delta , " (" , percentChange , "% ) " , " in month " , i , "\n\n"  ) ;
+						sendEmail ( inp: to = "manager@company.com\n" , subject = "Sales Up" , message = increasingSalesMessage ) ;
+					}
+				}
+			}
+			prevMonthRev[j] = revenue[j][i] ;
+		}
+	}
+	show ( country[0] , country[1] , country[2] , country[3] , country[4] , country[5] , country[6] , country[7] , country[8] , country[9]  ) ;
+	show ( revenue[0] , revenue[1] , revenue[2] , revenue[3] , revenue[4] , revenue[5] , revenue[6] , revenue[7] , revenue[8] , revenue[9]  ) ;
+}
+//- Create a post message to send to server
+post (inp: month , year out: postMessage  ) {
+	startDate = date ( 1 , month , year  ) ;
+	endDate = date ( 31 , month , year  ) ;
+	range = dateRange ( startDate , endDate  ) ;
+	string ( sessionType , "country"  ) ;
+}
+//- Send email to sales management
+sendEmail( inp: to, subject, message) {
+    show ( "-----------------------------------------\n", "Sending email To: " , to, "\n" , "Subject: " , subject, "\n", message, "\n\n"  ) ;
+}

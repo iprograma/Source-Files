@@ -1,0 +1,27 @@
+// Mission to Mars with Programa
+main () {
+    timeStep = 2 ;
+    speed.x = 3 ;
+    totalForce.x = 5 ;
+    rocket.mass = 6 ;
+    distanceTraveled.x = speed.x * timeStep + totalForce.x * timeStep *  timeStep / (2 * rocket.mass );
+    show ( distanceTraveled.x );
+}
+testComplexIf (inp: object , bar out: isInside  ) {
+    if ( (object.x > bar.x ) && (object.x < bar.x + bar.width)  ) {
+        isInside = "true";
+    }
+    else {
+        isInside = "false";
+    }
+    i = 0; // <= IF THERE IS NOTHING HERE, PROGRAM CRASHES
+}
+// test 2
+testMoreComplexIf (inp: object , bar out: isInside  ) {
+    if ((object.y < (bar.y + bar.height)) && (object.x > bar.x) && (object.x < (bar.x + bar.width))) {
+        isInside = "true";
+    }
+    else {
+        isInside = "false";
+    }
+}

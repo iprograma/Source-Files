@@ -1,0 +1,25 @@
+// Function that returns min, max, and ave of an array of numbers
+main  (  )     {
+
+    numbers = { 22, 13, 34 } ;
+    minmaxave ( inp: dataArray = numbers, out: max = max, min = min, ave = ave );
+    show ( numbers ) ;
+    show ( "Max= ", max, " Min= ", min, " Average= ", ave ) ;
+
+}
+minmaxave ( inp: dataArray, out: max, min, ave) {
+    max = N_INFINITY ;
+    min = P_INFINITY ;
+    ave = 0;
+    N = lengthOf (dataArray );
+    for ( i = 0 ; i < N ; i++ ) {
+        if ( dataArray [ i ] > max ) {
+            max = dataArray [ i ] ;
+        }
+        if ( dataArray[ i ] < min ) {
+            min = dataArray [ i ] ;
+        }
+        ave = ave + dataArray [ i ];
+    }
+    ave = ave / N;
+}

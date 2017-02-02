@@ -1,0 +1,118 @@
+// Program to show how to create 3D Models
+main () {
+    
+    color.red   = 128;
+    color.green = 128;
+    color.blue  = 128;
+    
+    cub1Color = color;
+    cub1Color.blue = 255;
+    cub2Color = color;
+    cub2Color.green = 255;
+    triangleColor.green = 200;
+    pyr1Color = color;
+    pyr1Color.red = 250;
+    pyr2Color = color;
+    pyr2Color.red = 220;
+    pyr3Color = color;
+    pyr3Color.red = 200
+  
+
+    // Programa example that creates a 5-story building that can be printed
+    // using a 3D printer
+    //
+    bx = 0;     // Start of building coordinates
+    by = 0;
+    bz = 0;
+    bw = 50;    // Width, height, and lenght of building floor
+    bd = 80;
+    bh = 160;
+    
+#if 0
+    create3DCube( inp: name="solidCube", operation="solid"   , x=-200, y=20, z= 40, w=bw, d=bd, h=bh, color=cub1Color);
+    create3DCube( inp: name="Cube"     , operation="nonSolid", x= 200, y=20, z=200, w=bw, d=bd, h=bh, color=cub2Color);
+    create3DPyramid( inp: name="Pyr1",  x=-300, y=  0, z=0, w=50, d=80, h=100, color=pyr1Color);
+    create3DPyramid( inp: name="Pyr2",  x=-300, y=100, z=0, w=50, d=80, angle=45, color=pyr2Color);
+    create3DPyramid( inp: name="Pyr3",  x=-300, y=200, z=0, w=50, d=80, h = 50, angle=80, color=pyr3Color );
+#endif
+    
+    floorColor = color;
+    for ( floor = 0 ; floor < 5 ; floor ++  ) {     // Create 5 floors
+        // Create front, back, left, right, bottom, and top rectangles for each floor
+        create3DRect ( inp: name="floor", orientation = "front" , x = bx , y = by , z = bz , w = bw , h = bd, color=floorColor ) ; //0, 0, 0
+        ny = by+bh;
+        create3DRect ( inp: name="floor", orientation = "back"  , x = bx , y = ny , z = bz , w = bw , h = bd, color=floorColor ) ; //0, 0, 0
+        create3DRect ( inp: name="floor", orientation = "left"  , x = bx , y = by , z = bz , w = bw , h = bh, color=floorColor ) ; //0, M_PI/2.0, 0
+        nx = bx+bd;
+        create3DRect ( inp: name="floor", orientation = "right" , x = nx , y = by , z = bz , w = bw , h = bh, color=floorColor ) ; //0, M_PI/2.0, 0
+        create3DRect ( inp: name="floor", orientation = "bottom", x = bx , y = by , z = bz , w = bd , h = bh, color=floorColor ) ; //0, M_PI/2.0, M_PI/2.0
+        nz = bz+bw;
+        create3DRect (  inp: name="floor", orientation = "top"  , x = bx , y = by , z = nz , w = bd , h = bh, color=floorColor ) ; //0, M_PI/2.0, M_PI/2.0
+        
+        ww = 20;    // Width the length dimensions of windows
+        wh = 20;
+        of = 10;    // Distance between windows
+        for ( window = 0 ; window < 2 ; window ++  ) {          // Place windows in the front side of the building
+            winOffset = of + window*(ww+of);                    // Calculate the location of each window based on its size and its floor
+            zoffset = bz + of;
+            create3DRect (  inp : orientation =  "front" , x = winOffset, y = by , z = zoffset , w = ww , h = wh, operation="CUT"  )  ;
+        }
+        bz = bz + bw;
+        floorColor.red   = floorColor.red   + 20;
+        floorColor.blue  = floorColor.blue  + 20;
+        floorColor.green = floorColor.green + 20;
+    }
+
+    // Now create the roof of the building using Triangles
+    topFloor = bz;
+    roofColor.red  = 250;
+    roofColor.green= 150;
+    roofColor.bule =  50;
+    roofHeight = 50;
+    topOfRoof = topFloor + roofHeight;
+    roofAngle = 45;
+    p0.x = 0;
+    p0.y = 0;
+    p0.z = topFloor;
+    p2.x = bd;
+    p2.y = 0;
+    p2.z = topFloor;
+    create3DTriangle(inp:  name="front", p0=p0, h=roofHeight, yAngle=roofAngle, p2=p2, color=roofColor, out: triangle=pf ) ;
+    p0.x = 0;
+    p0.y = pf[1].y;
+    p0.z = topFloor;
+    create3DTriangle(inp:  name="frontLside", p0=p0, p1=pf[1], p2=pf[0], color=roofColor, out: triangle=pfls ) ;
+    p0.x = bd;
+    p0.y = 0;
+    p0.z = topFloor;
+    p2.x = bd;
+    p2.y = pf[1].y;
+    p2.z = topFloor;
+    create3DTriangle(inp:  name="frontRside", p0=p0, p1=pf[1], p2=p2, color=roofColor, out: triangle=prls ) ;
+
+    groupAndCopy(inp: group="roofView", "front", "frontLside", "frontRside");
+    d = bh;
+    moveAndRotateGroup(inp: group="roofView", y=d, x=bd, zAngle=180);
+    p1.x = pf[0].x;
+    p1.y = bh-pf[1].y;
+    p1.z = pf[0].z;
+    p2.x = pf[1].x;
+    p2.y = bh-pf[1].y;
+    p2.z = pf[1].z;
+    create3DRect(inp: name="leftRoof" , p0 = pfls[0], p1 = p1, p2 = p2, p3 = pf[1], color=roofColor);
+    p1.x = pf[2].x;
+    //p1.y = bh-pf[1].y;
+    p1.z = pf[2].z;
+    create3DRect(inp: name="rightRoof", p0 = prls[2], p1 = p1, p2 = p2, p3 = pf[1], color=roofColor);
+    
+    //create3DObject("model.stl", "STL_Ascii" );
+    create3DObject("model.stl", "STL_Binary" );
+}
+
+
+//create3DTriangle( (char *) "front"      , 0,  0, bz, bd/2,    50, bz+roofh, bd,  0, bz, color );
+//create3DTriangle( (char *) "back"       , 0, bh, bz, bd/2, bh-50, bz+roofh, bd, bh, bz, color );
+//create3DTriangle( (char *) "front left" , 0,  0, bz, bd/2,    50, bz+roofh,  0, 50, bz, color );
+//create3DTriangle( (char *) "front right", bd, 0, bz, bd/2,    50, bz+roofh, bd, 50, bz, color );
+//create3DTriangle( (char *) "back  left" , 0, bh, bz, bd/2, bh-50, bz+roofh,  0, bh-50, bz, color );
+//create3DTriangle( (char *) "back  right", bd,bh, bz, bd/2, bh-50, bz+roofh, bd, bh-50, bz, color );

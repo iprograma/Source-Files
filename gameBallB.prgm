@@ -1,0 +1,132 @@
+// Mission to Mars with Programa
+main () {
+	// Constants
+	pi = 3.14159;
+	// Graphics window
+	frame.x = 0;
+	frame.y = 0;
+	frame.w = 800;
+	frame.h = 800;
+	//- Create graphics window, generates ball and bar, and enables keyboard
+	createGraphics ( "Ball Bouncing Game" , 50 , 900 , 800 , 800 , "bballs.jpg"  ) ;
+	frame.h = frame.h - 30;
+	frame.w = frame.w - 10;
+	keyPressed = "keyPressed" ;
+	enableKeyboard ( keyPressed  ) ;
+	makeObject ( inp: name = "bar" , type = "rectangular" , x = 400 , y = 100 , width = 100 , height = 10 , refCorner = "CENTER" , outlineColor = "white" , fillColor = "blue"  , out: object = bar  ) ;
+	x = bar.x + ( bar.width / 2 ) ;
+	y = bar.y + bar.height;
+	makeObject ( inp: name = "ball" , type = "circular" , x = x , y = y , width = 10 , height = 10 , refCorner = "CENTER" , outlineColor = "white" , fillColor = "green"  , out: object = ball  ) ;
+	//- Create User inteface buttons
+	createActionButton ( 50 , 750 , 80 , 30 , "CENTER" , "blue" , "black" , "white" , "Arial:12" , "Start" , "startButtonClicked"  ) ;
+	createActionButton ( 150 , 750 , 80 , 30 , "CENTER" , "blue" , "black" , "white" , "Arial:12" , "Finish" , "finishButtonClicked"  ) ;
+	createTextFieldWithLabel ( 50 , 700 , 50 , 20 , "CENTER" , "blue" , "darkGray" , "black" , "Arial:12" , "CENTER" , "Speed" , "clear" , "green" , "Arial:12" , "Speed"  ) ;
+	//- Initialize parameters
+	Finish = "false";
+	stopMovement = "true";
+	startButtonClicked  = "false";
+	ball.x = bar.x + ( bar.width / 2 ) ;
+	ball.y = bar.y + bar.height;
+	Speed = 7;
+	globalTime = 0;
+	timeStep = 5;
+	while (       Finish == "false"       ) {
+		//- Restart game
+		if (       startButtonClicked == "true"       ) {
+			ball.x = bar.x + ( bar.width / 2 ) ;
+			ball.y = bar.y + bar.height;
+			angle = rand (  ) ;
+			angle = angle % 180 ;
+			angleInPi = pi * angle / 180 ;
+			stopMovement = "false";
+			show ( "new start"  ) ;
+			startButtonClicked  = "false";
+			globalTime = 0;
+		}
+		//- Check if user has pressed the 'a' or 'y' key and move the bar
+		if (    keyPressed == "a"    ) {
+			bar.x = bar.x - 5;
+		}
+		else if (    keyPressed == "d"    ) {
+			bar.x = bar.x + 5;
+		}
+		if (    stopMovement == "false"    ) {
+			//- Check to see if ball hit the walls of the bar
+			checkIfBallBounced ( inp: object = ball , frame = frame , bar = bar , inpAngle = angle , speed = Speed  , out: newObject = ball , outAngle = angle , outOfBound = stopMovement  ) ;
+			updateGraphics ( "ball" , "position" , ball.x , ball.y  ) ;
+			if (   stopMovement == "true"   ) {
+				show ( "Lost game"  ) ;
+			}
+		}
+		updateGraphics ( "bar" , "position" , bar.x , bar.y  ) ;
+		globalTime = globalTime + timeStep;
+	}
+	show ( "Program finished"  ) ;
+}
+//- Check if ball hits the wall and calculate new ball position
+checkIfBallBounced (inp: object , frame , bar , inpAngle , speed out: newObject , outAngle , outOfBound  ) {
+	//F// checkIfBallBounced :  (null)
+	//P// object : (null)
+	//P// frame : (null)
+	//P// bar : (null)
+	//P// inpAngle : (null)
+	//P// speed : (null)
+	//P// newObject : (null)
+	//P// outAngle : (null)
+	//P// outOfBound : (null)
+	pi = 3.14159;
+	outofBound = "false" ;
+	if (    object.x < frame.x    ) {
+		outAngle = 180 - inpAngle ;
+		newObject.x = frame.x ;
+	}
+	else if (    object.x > (frame.x + frame.w )    ) {
+		outAngle = 180 - inpAngle ;
+		newObject.x = frame.x + frame.w ;
+	}
+	else if (   (object.y < bar.y + bar.height ) && (object.x > bar.x) && (object.x < bar.x + bar.width)  ) {
+		outAngle = 360 - inpAngle ;
+		newObject.y = bar.y;
+	}
+	else if (    object.y  <= frame.y    ) {
+		outOfBound = "true" ;
+	}
+	else if (    object.y > (frame.y + frame.h )        ) {
+		outAngle = 360 - inpAngle ;
+		newObject.y = frame.y + frame.h ;
+	}
+	else {
+		outAngle = inpAngle ;
+	}
+	angleInPi = pi * outAngle / 180;
+	agl.x = cos ( angleInPi  ) ;
+	agl.y = sin ( angleInPi  ) ;
+	dist.x = speed * agl.x ;
+	dist.y = speed * agl.y ;
+	newObject.x = object.x + dist.x ;
+	newObject.y = object.y + dist.y ;
+}
+//- Definition of an object
+makeObject (inp: name , type , x , y , width , height , refCorner , outlineColor , fillColor out: object  ) {
+	//F// makeObject :   Defines a rectangular of circular object
+	//P// name :   name of object
+	//P// type :   type of object (circular or rectangular)
+	//P// x :   x position
+	//P// y :   y position
+	//P// width :   width
+	//P// height :   height
+	//P// refCorner :   reference corner for the origin
+	//P// outlineColor :   outline color
+	//P// fillColor :   fillColor
+	//P// object :   output object
+	object.x = x;
+	object.y = y;
+	object.width = width;
+	object.height = height;
+	if (   type == "rectangular"   ) {
+		createRectangularObject ( name , x , y , width , height , refCorner , outlineColor , fillColor  ) ;
+	}
+	else {
+		createCircularObject ( name , x , y , width , height , refCorner , outlineColor , fillColor  ) ;
+	}
+}

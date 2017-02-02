@@ -1,0 +1,120 @@
+// This is a program to demonstrate natural language processing
+main (   )  {
+    readAndAnalyzeDataFromFile ( inp: "NCAAStats.txt" , statistics ) ;
+    //  how many field goals duke made
+    //  how many free throws Duke made
+    //  what is the team with the highest free throw percentage
+    //  what are the top 5 teams with the best free throw percentage
+    //  list the 5 teams with the worst points made record
+    //  how many games had Duke played
+    //  how many field goals Duke attempted
+    //  how many field goals Duke made
+    //  how many games UCLA played
+    //  which is the team with the highest rank
+    //  what are the best five teams with the highest rank
+    analyzeUserInput (inp: statistics , " how many field goals duke made " , out: out1 ) ;
+    analyzeUserInput (inp: statistics , " how many free throws Duke made " , out: out2 ) ;
+    analyzeUserInput (inp: statistics , " what is the team with the highest free throw percentage " , out: out3 ) ;
+    analyzeUserInput (inp: statistics , " what are the top 5 teams with the best free throw percentage " , out: out4 ) ;
+    analyzeUserInput (inp: statistics , " list the 5 teams with the worst points made record " , out: out5 ) ;
+    analyzeUserInput (inp: statistics , " how many games had Duke played " , out: out6 ) ;
+    analyzeUserInput (inp: statistics , " how many field goals Duke attempted " , out: out7 ) ;
+    analyzeUserInput (inp: statistics , " how many games UCLA played " , out: out8 ) ;
+    analyzeUserInput (inp: statistics , " which is the team with the highest rank " , out: out9 ) ;
+    analyzeUserInput (inp: statistics , " what are the best five teams with the highest rank " , out: out10 ) ;
+    
+}
+// -------------------------------------------------
+// Description : wSearch for name and return string
+SearchForNameAndReturnField ( inp : dataArray , valueToFind , out : outField ) {
+    
+    found = 0 ;
+    if ( isNumber ( valueToFind ) ) {
+        nameType = "N" ;
+    }
+    else {
+        nameType = "T" ;
+    }
+    
+    for ( j = 0 ; j < dataArray . numFields ; j ++  ) {
+        if ( nameType == dataArray . field [ j ]  . type ) {
+            field = dataArray . field [ j ]  . name ;
+            for ( i = 0 ; i < lengthOf ( dataArray )  ; i = i + 1 ) {
+                if ( dataArray [ i ]  .  [ field ] == valueToFind ) {
+                    outField = field ;
+                    found = 1 ;
+                    break ; // i = lengthOf ( dataArray )  ; // break
+                    //j = dataArray . numFields ; // break
+                }
+            }
+            if ( found == 1 ) {
+                break ;
+            }
+        }
+    }
+    if ( found == 0 ) {
+        outName = "Not found" ;
+    }
+}
+// -------------------------------------------------
+// Description : Find name in field
+SearchForNameInFieldAndReturnValue ( inp : dataArray , field , name , outField , out : outName ) {
+    found = 0 ;
+    for ( i = 0 ; i < lengthOf ( dataArray )  ; i ++  ) {
+        if ( dataArray [ i ]  .  [ field ] == name ) {
+            outName = dataArray [ i ]  .  [ outField ]  ;
+            found = 1 ;
+            i = lengthOf ( dataArray )  ; // break
+        }
+    }
+    if ( found == 0 ) {
+        outName = "Not found" ;
+    }
+}
+// -----------------------------------------------------------
+// Description : Return value of a field
+returnFieldValue ( inp : dataArray , list , outField , out : name ) {
+    
+    //show ( "Field is " , outField , " with value " )  ;
+    for ( i = 0 ; i < lengthOf ( list )  ; i ++  ) {
+        num = list [ i ]  ;
+        //show ( "Field is " , outField )  ;
+        name [ i ] = dataArray [ num ]  .  [ outField ]  ;
+    }
+}
+
+// ------------------------------------------------------------
+// Description : search array
+findTopN ( inp : dataArray , N , type , fieldCheck , out : resultList ) {
+    
+    for ( i = 0 ; i < N ; i ++  ) {
+        if ( type == "max" ) {
+            list [ i ]  . num = N_INFINITY ;
+        }
+        else {
+            list [ i ]  . num = P_INFINITY ;
+        }
+        list [ i ]  . id = 0 ;
+    }
+    
+    dataLength = lengthOf ( dataArray )  ;
+    for ( i = 0 ; i < dataLength ; i ++  ) {
+        num  = dataArray [ i ]  .  [ fieldCheck ]  ;
+        for ( j = 0 ; j < N ; j ++  ) {
+            compResult = num - list [ j ]  . num ;
+            if ( type == "max" && compResult >= 0 || type == "min" && compResult < 0 ) { 
+                for ( k = N - 1 ; k >= j + 1 ; k -- ) { 
+                    list [ k ]  . id  = list [ k - 1 ]  . id ; 
+                    list [ k ]  . num = list [ k - 1 ]  . num ; 
+                } 
+                list [ j ]  . num = num ; 
+                list [ j ]  . id = i ; 
+                break ; 
+            }					
+        } 
+    } 
+    
+    for ( i = 0 ; i < N ; i ++  ) { 
+        resultList [ i ] = list [ i ]  . id ; 
+    } 
+}

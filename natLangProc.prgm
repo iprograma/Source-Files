@@ -1,0 +1,254 @@
+// Program to explore statistics
+main () {
+	a = -234.5;
+	error = 0;
+
+
+#if 0
+#else 
+			
+
+	// Test negative numbers
+	if( a != -234.5 ) {
+		error = 1;
+		show("\nERROR: in a. Should be -234.5 instead of ", a, "\n");
+	}
+	
+	readAndAnalyzeDataFromFile ( "NCAAStats.txt", statistics ) ;
+	
+	// List the 10 top teams with the highest 3-point percentage
+	findTopN( inp: dataArray=statistics, N=10, type="max", fieldCheck="3PP", out: resultList=res);
+	fieldName = "TEAM";
+	returnFieldValue( inp: dataArray=statistics, list=res, out: outField=fieldName, name=teamNames);
+	fieldName = "3PP";
+	returnFieldValue( inp: dataArray=statistics, list=res, out: outField=fieldName, name=pts);
+	show(res, teamNames, pts);
+	// Floating point comparisons will fail. Do not know. Numbers are not stored exactly
+	//if( pts[0] != 0.421 || pts[1] != 0.397 || pts[2] != 0.396 || pts[3] != 0.394 || pts[4] != 0.394 || 
+	//	pts[5] != 0.392 || pts[6] != 0.391 || pts[7] != 0.391 || pts[8] != 0.390 || pts[9] != 0.390 ) {
+	//		error = 1;
+	//		show("Error in list of percentages of the teams with the highest 3-point percentage");
+	//}
+	if( teamNames[0] != "Creighton" || teamNames[1] != "Belmont" || teamNames[2] != "Iona" || 
+		teamNames[3] != "IPFW" || teamNames[4] != "Gonzaga" || teamNames[5] != "Oregon" || 
+		teamNames[6] != "Duke" || teamNames[7] != "UCLA" ||	teamNames[8] != "Eastern Kentucky" || 
+		teamNames[9] != "Baylor") {
+				error = 1;
+				show("\nERROR: in list of names of the teams with the highest 3-point percentage\n");
+	}
+    else {
+        show("\nPASS: list of names of the teams with the highest 3-point percentage\n");
+    }
+
+
+	teamName = "UCLA";
+	SearchForNameAndReturnField( inp: dataArray=statistics, valueToFind=teamName, out: outField=field1);
+	show(teamName, " is in ", field1, " field.");
+	if( field1 != "TEAM" ) {
+		error = 1;
+		show("\nERROR: Checking on what is UCLA does not return TEAM\n");
+	}
+	
+	someNumber = 1025;
+	SearchForNameAndReturnField( inp: dataArray=statistics, valueToFind=someNumber, out: outField=field2);
+	show(someNumber, " is in ", field2, " field.");
+	if( field2 != "FTA" ) {
+		error = 1;
+		show("\nERROR: Checking on what is 1025 does not return FTA, but ", field2, "\n");
+	}
+	
+	teamName = "UCLA";
+	SearchForNameInFieldAndReturnValue(inp: dataArray=statistics, field="TEAM", name=teamName, outField="GP", out: outName=games1);
+	show(teamName, " played " games1 " games.");
+	
+	teamName = "Iowa State";teamName = "Iowa State";
+	SearchForNameInFieldAndReturnValue(inp: dataArray=statistics, field="TEAM", name=teamName, outField="GP", out: outName=games2);
+	show(teamName, " played " games2 " games.");
+	
+	if( field1 == "TEAM" && field2 == "FTA" && games1 == 34 && games2 == 33 ) {
+		show("\nNatLangProc PASSED\n");
+	}
+	else {
+		show("\nERROR: NatLangProc failed: ", field1, " should be TEAM, ", field2, " should be GP, ", games1, " should be 34, and ", games2, " should be 33\n");
+		show("\nMake sure you run the program with the NCAAStatsTest.txt program\n");
+	}
+	
+	analyzeUserInput(statistics, "how many free throws Duke made", outValue); //ok
+	if(outValue != 552 ) {
+		error = 1;
+		show("\nERROR: Duke has made 552 free throws instead of ", outValue, "\n");
+	}
+
+	analyzeUserInput(statistics, "what is the team with the highest free throw percentage", outValues); // ok
+	if( outValues.resultNames[0] != "Cal State Northridge" ) {
+		error = 1;
+		show("\nERROR: Team with the highest free throw percentage should be Cal State Northridge instead of ", outValues.resultNames[0], "\n");
+	}
+
+
+	analyzeUserInput(statistics, "what are the top 5 teams with the best free throw percentage", outValues); // ok
+	if(outValues.resultNames[0] != "Cal State Northridge" || outValues.resultNames[1] != "Oregon" ||
+	   outValues.resultNames[2] != "Creighton" || outValues.resultNames[3] != "Eastern Kentucky" ||
+	   outValues.resultNames[4] != "Oklahoma") {
+	   error = 1;
+	   show("\nERROR: in top 5 teams with the highest free throw percentage\n");
+	}
+
+	analyzeUserInput(statistics, "list the 5 teams with the worst points made record", outValues);
+	if(outValues.resultNames[0] != "Davidson" || outValues.resultNames[1] != "Texas Southern" ||
+	   outValues.resultNames[2] != "Kentucky" || outValues.resultNames[3] != "Charleston Southern" ||
+	   outValues.resultNames[4] != "Stephen F. Austin") {
+	   error = 1;
+	   show("\nERROR: in worst 5 teams with the lowest goals made\n");
+	}
+
+	analyzeUserInput(statistics, "how many games had Duke played", outValue);  // ok
+	if(outValue != 33 ) {
+		error = 1;
+		show("\nERROR:: Duke should have played 33 games instead of ", outValue, "\n");
+	}
+	
+	analyzeUserInput(statistics, "how many field goals Duke attempted", outValue);
+	if(outValue != 1895 ) {
+		error = 1;
+		show("\nERROR: Duke should have attempted  1895 instead of ", outValue, "\n");
+	}
+	
+	analyzeUserInput(statistics, "how many field goals Duke made", outValue);
+	//analyzeUserInput(statistics, "how many games UCLA played", outValue);
+	if(outValue != 883 ) {
+		error = 1;
+		show("\nERROR: Duke should have made 883 instead of ", outValue, "\n");
+	}
+ 
+	//analyzeUserInput(statistics, "which is the highest ranking team"); // does not work
+	analyzeUserInput(statistics, "which is the team with the highest rank", outValuesRank5); // ok
+	if(outValuesRank5.resultNames[0] != "BYU" ) {
+		error = 1;
+		show("\nERROR: BYU should have been the highest rank team instead of ", outValuesRank5.resultNames[0], "\n");
+	}
+
+	analyzeUserInput(statistics, "what are the best five teams with the highest rank", outValuesRank5);
+	if(outValuesRank5.resultNames[0] != "BYU"  || outValuesRank5.resultNames[1] != "Louisville" ||
+	   outValuesRank5.resultNames[2] != "UCLA" || outValuesRank5.resultNames[3] != "Louisiana Tech" ||
+	   outValuesRank5.resultNames[4] != "Iowa State") {
+	   error = 1;
+	   show("\nERROR: in highest ranked 5 teams\n");
+	}
+	
+	readAndAnalyzeDataFromFile ( "NCAAStatsTest.txt", statistics ) ;
+	findTopN(inp: dataArray=statistics, N=5, type="max", fieldCheck="PTS", out: resultList=results);
+	
+	returnFieldValue( inp: dataArray=statistics, list=results, outField="TEAM", out: name=names );
+	returnFieldValue( inp: dataArray=statistics, list=results, outField="PTS" , out: name=res5 );
+	
+	if(res5[0] != 2895 || res5[1] != 2892 || res5[2] != 2863 || res5[3] !=  2802 || res5[4] != 2782 ) {
+		show("\nERROR: in stats2 for Total points scored\n");
+		error = 1;
+	} 
+
+	show("Team	Points Scored");
+	show(names, res5);
+	
+	if( error == 1 ) {
+		show("\n\nTEST FAILED\n\n");
+	}
+	else {
+		show("\n\nTEST PASSED\n\n");
+	}
+
+	
+#endif
+		
+}
+// -------------------------------------------------
+SearchForNameAndReturnField( inp: dataArray, valueToFind, out: outField) {
+	found = 0;
+	if( isNumber(valueToFind) ) {
+		nameType = "N";
+	}
+    else {
+		nameType = "T";
+	}
+		
+	for( j=0; j<dataArray.numFields; j++) {
+		if( nameType == dataArray.field[j].type ) {
+			field = dataArray.field[j].name;
+			for(i=0; i<lengthOf(dataArray); i = i+1) {
+				if( dataArray[i].[field] == valueToFind ) {
+					outField = field;
+					found = 1;
+					break; // i = lengthOf(dataArray); // break
+					//j = dataArray.numFields; // break
+				}
+			}
+			if( found == 1 ) {
+				break;
+			}
+		}
+	}
+	if( found == 0 ) {
+		outName = "Not found";
+	}
+}
+// -------------------------------------------------
+SearchForNameInFieldAndReturnValue( inp: dataArray, field, name, outField, out: outName) {
+	found = 0;
+	for(i=0; i<lengthOf(dataArray); i++) {
+		if( dataArray[i].[field] == name ) {
+			outName = dataArray[i].[outField];
+			found = 1;
+			i = lengthOf(dataArray); // break
+		}
+	}
+	if( found == 0 ) {
+		outName = "Not found";
+	}
+}
+// -----------------------------------------------------------
+returnFieldValue( inp: dataArray, list, outField, out: name) {
+
+	//show("Field is ", outField, " with value ");
+	for(i=0; i<lengthOf(list); i++) {
+		num = list[i];
+		//show("Field is ", outField);
+		name[i] = dataArray[num].[outField];
+	}
+}
+
+// ------------------------------------------------------------
+// Description: search array
+findTopN( inp: dataArray, N, type, fieldCheck, out: resultList) {
+	
+	for(i=0; i<N; i++) {
+		if( type == "max" ) {
+			list[i].num = N_INFINITY;
+		}
+		else {
+			list[i].num = P_INFINITY;
+		}
+		list[i].id = 0;
+	}
+	
+	dataLength = lengthOf(dataArray);
+	for(i=0; i< dataLength; i++) {
+		num  = dataArray[i].[fieldCheck];
+		for(j=0; j<N; j++) {
+			compResult = num - list[j].num;
+			if ( type == "max" && compResult >= 0 || type == "min" && compResult < 0) {
+				for(k=N-1; k >= j + 1 ; k-- ) {
+					list[k].id  = list[k-1].id;
+					list[k].num = list[k-1].num;
+				}
+				list[j].num = num;
+				list[j].id = i;
+				break;
+			}					
+		}
+	}
+	
+	for(i=0; i<N; i++) {
+		resultList[i] = list[i].id;
+	}
+}
+

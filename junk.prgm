@@ -1,0 +1,11 @@
+// This is a comment
+main () {
+	fdf ( inp: inp1 = Value , inp2 = Value , inp3 = Value  , out: out1 = Value  ) ;
+}
+fdf (inp: inp1 , inp2 , inp3 out: out1  ) {
+	//F// fdf : This is my new function
+	//P// inp1 : This is 1 input
+	//P// inp2 : This is 2 out
+	//P// inp3 : this is 3 out
+	//P// out1 : This is my first output
+}

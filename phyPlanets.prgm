@@ -1,0 +1,178 @@
+// Mission to Mars with Programa
+main () {
+    // Constants
+    earthToMarsDistance = 2.25e11;
+    gravitationalForce = 6.67408e-11;
+    pi = 3.14159;
+    secsInADay = 60 * 60 * 24;
+    // Graphics window
+    frame.x = 0;
+    frame.y = 0;
+    frame.w = 800;
+    frame.h = 800;
+	createGraphics ( "Misson to Mars" , 10 , 900 , 800 , 800 , "universe.png"  ) ;
+	// Definition of planets, spacecraft, and forces
+	makePlanet ( inp: name = "earth" , x = 100 , y = 100 , radious = 100 , mass = 5.972e24 , refCorner = "CENTER", borderColor = "", fillColor = "", imageName = "earth.png"  out: planet = earth  ) ;
+	    planets[0] = earth;
+	makePlanet ( inp: name = "mars" , x = 600 , y = 600 , radious = 55 , mass = 6.39e25 , refCorner = "CENTER", borderColor = "", fillColor = "", imageName = "mars.png"  out: planet = mars  ) ;
+	planets[1] = mars;
+	makeObject ( inp: name = "rocket" , x = 110 , y = 205 , width = 10 , height = 10 , mass = 1.180e6 , , refCorner = "CENTER", outlineColor = "white" , fillColor = "red"   , out: object = rocket  ) ;
+	createArrow ( "earthForce" , rocket.x , rocket.y , earthForceScaled , 10 , "white" , "cyan" , 0  ) ;
+	createArrow ( "marsForce" , rocket.x , rocket.y , marsForceScaled , 10 , "white" , "orange" , 0  ) ;
+    // Calcuate scaling of graphics window with actual distances
+	earthMarsDistInView.x = mars.x - earth.x;
+	earthMarsDistInView.y = mars.y - earth.y;
+	earthMarsDistInView = hypot ( earthMarsDistInView.x , earthMarsDistInView.y  ) ;
+	scale = earthToMarsDistance / earthMarsDistInView;
+	// Launch parameters
+	launchAngle = 78;
+	initialSpeed = 115;
+    showForces = "true";
+	// Start the cacluations of the rocket launch
+    timeStep = secsInADay * 24 ;
+    globalTime = 0;
+	stopMovement = "false";
+    angleInPi = pi * launchAngle / 180;
+	speed.x = initialSpeed * cos ( angleInPi ) ;
+	speed.y = initialSpeed  * sin ( angleInPi ) ;
+	while ( stopMovement == "false" ) {
+        // Calculate various distances
+        distanceToEarth.x = earth.x - rocket.x ;
+        distanceToEarth.y = earth.y - rocket.y ;
+		distanceToEarthX = distanceToEarth.x * scale;
+		distanceToEarthY = distanceToEarth.y * scale;
+		distanceToMars.x = mars.x - rocket.x ;
+		distanceToMars.y = mars.y - rocket.y;
+		distanceToMarsX = distanceToMars.x * scale;
+		distanceToMarsY = distanceToMars.y * scale;
+		distanceToEarth = hypot ( distanceToEarthX , distanceToEarthY  ) ;
+		distanceToMars = hypot ( distanceToMarsX , distanceToMarsY  ) ;
+		distanceToEarthP2 = pow ( distanceToEarth , 2  ) ;
+        distanceToMarsP2 = pow ( distanceToMars , 2  ) ;
+        // Calculate planet forces on rocket
+		earthForce = gravitationalForce * earth.mass * rocket.mass / distanceToEarthP2  ;
+		earthForce.x = distanceToEarthX * earthForce / distanceToEarth;
+		earthForce.y = distanceToEarthY * earthForce / distanceToEarth;
+		marsForce = gravitationalForce * mars.mass * rocket.mass / distanceToMarsP2 ;
+		marsForce.x = distanceToMarsX * marsForce / distanceToMars;
+		marsForce.y = distanceToMarsY * marsForce / distanceToMars;
+		totalForce.x = marsForce.x + earthForce.x ;
+		totalForce.y = marsForce.y + earthForce.y;
+		// Calculate distance traveled due to initial speed
+		distTraveledFromSpeed.x = speed.x * timeStep;
+		distTraveledFromSpeed.y = speed.y * timeStep;
+		// Calculate distance traveled due to gravitational forces
+		distTraveledFromForce.x = ( 1/2 ) * totalForce.x * timeStep *  timeStep / rocket.mass ;
+		distTraveledFromForce.y = ( 1/2 ) * totalForce.y * timeStep *  timeStep / rocket.mass ;
+		// Totoal distances
+		distanceTraveledX = distTraveledFromSpeed.x + distTraveledFromForce.x;
+		distanceTraveledY = distTraveledFromSpeed.y + distTraveledFromForce.y;
+		// Calculate new speed of rocket
+		speed.x = distanceTraveledX / timeStep;
+		speed.y = distanceTraveledY / timeStep;
+		rocket.x = rocket.x + distanceTraveledX  / scale;
+		rocket.y = rocket.y + distanceTraveledY  / scale;
+		// Check to see if rocket is outside of graphics area or it has landed
+		isOutsideFrame ( inp: object = rocket , frame = frame  , out: isOutside = outsideFrame  ) ;
+		if ( outsideFrame == "true" ) {
+			show ( "Rocket is out of viewing area"  ) ;
+		}
+		isInTopOfPlanet ( inp: planets = planets , object = rocket  , out: rocketLanded = landed  ) ;
+		if ( landed == "true") {
+			show ( "Rocket landed"  ) ;
+		}
+		if (  outsideFrame == "true" || landed == "true"  ) {
+            stopMovement = "true" ;
+		}
+		updateGraphics ( "rocket" , "position", rocket.x , rocket.y  ) ;
+		if ( showForces == "true" ) {
+			calculateAngle ( inp: distance = distanceToEarth, object = rocket , out: angle = earthAngle, position = earthForceVecPos  ) ;
+			calculateAngle ( inp: distance = distanceToMars , object = rocket , out: angle = marsAngle ,  position = marsForceVecPos  ) ;
+            earthForceScaled = 100 * abs ( earthForce  ) ;
+            marsForceScaled = 500 * abs ( marsForce  ) ;
+			marsForceScaled = sqrt ( marsForceScaled  ) ;
+			updateGraphics ( "marsForce" , "position", marsForceVecPos.x , marsForceVecPos.y , marsAngle , marsForceScaled  ) ;
+			updateGraphics ( "earthForce" , "position", earthForceVecPos.x , earthForceVecPos.y , earthAngle , earthForceScaled  ) ;
+		}
+	}
+    globalTime = globalTime + timeStep;
+}
+// Check to see if rocket has been landed
+isInTopOfPlanet (inp: planets , object out: rocketLanded  ) {
+	rocketLanded = "false";
+	center.x = object.x +  object.width ;
+	center.y = object.y +  object.height ;
+	show ( center.x , " " , center.y , " "  ) ;
+	for ( i = 0 ; i < lengthOf(planets ) ; i ++ ) {
+		planet = planets[i];
+		distance.x = center.x - planet.x;
+		distance.y = center.y - planet.y;
+		distanceFromPlanet = hypot ( distance.x , distance.y  ) ;
+		if (  distanceFromPlanet <= planet.radious  ) {
+			rocketLanded = "true";
+			break;
+		}
+	}
+}
+// Check to see if rocket is out of the frame
+isOutsideFrame (inp: object , frame out: isOutside  ) {
+    isOutside = "false" ;
+	if ( object.x < frame.x  ) {
+        isOutside = "true" ;
+	}
+	if ( object.x > (frame.x + frame.w ) ) {
+        isOutside = "true" ;
+	}
+	if ( object.y < frame.y ) {
+        isOutside = "true" ;
+	}
+	if ( object.y > (frame.y + frame.h ) ) {
+        isOutside = "true" ;
+	}
+}
+// Calculate angle of the rocket from a planet
+calculateAngle (inp: distance, object out: angle, position  ) {
+    pi = 3.14159265359;
+    dydx = distance.y / distance.x;
+	angleInRad = (180 / pi ) * atan ( dydx  ) ;
+	if ( distance.x < 0 ) {
+        angle = 180 +  angleInRad;
+	}
+	else if ( distance.y < 0 ) {
+        angle = 360 +  angleInRad;
+	}
+	else {
+        angle =  angleInRad;
+	}
+    angleInRad = pi * (angle / 180);
+    ca = cos ( angleInRad );
+    sa = sin ( angleInRad );
+    
+    pox = object.x + 0.5 * object.width;
+    ox = 0.5 * object.width * cos ( angleInRad );
+    position.x = pox + ox;
+    poy = object.y + 0.5 * object.height ;
+    oy = 0.5 * object.height * sin ( angleInRad );
+    position.y = poy + oy ;
+    //show ( object.x, " " object.y, " ", position.x, " = ", position.y, " (", angle, ") ", ca, " ", sa, " [", pox, " ", poy, "] ", " [", ox, " ", oy, "] " );
+}
+// Definition of Planets
+makePlanet (inp: name , x , y , radious , mass , refCorner, borderColor, fillColor, imageName ,  out: planet  ) {
+    object.x = x;
+    object.y = y;
+    object.radious = radious;
+    object.mass = mass;
+    size = 2*radious;
+    createCircularObject ( name , x , y , size , size , refCorner, borderColor, fillColor, imageName ) ;
+    planet = object;
+}
+// Definition of objects
+makeObject (inp: name , x , y , width , height , mass , refCorner, outlineColor , fillColor  out: object  ) {
+    object.x = x;
+    object.y = y;
+    object.width = width;
+    object.height = height;
+    createCircularObject ( name , x , y , width , height , refCorner, outlineColor , fillColor  ) ;
+    object.mass = mass;
+}
+

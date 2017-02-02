@@ -1,0 +1,16 @@
+// Tests Ploting
+main ( ) {
+	readAndAnalyzeDataFromFile ( "NCAAStats.txt" , statistics ) ;
+	for ( i = 0 ; i < lengthOf ( statistics  )  ; i ++  ) {
+		team [ i  ]  = statistics [  i ] . TEAM ;
+        freeThrowPercent [  i ]   = statistics [  i ] . FTP  ;
+        fieldGoalPercent  [ i  ]  = statistics [  i ] . FGP  ;
+        threePointPercent [  i ]  = statistics [  i ] . 3PP  ;
+	}
+
+	for ( i = 1 ; i < 50 ; i ++  ) {
+		data [  i ]  = log ( i   )  ;
+		data2 [ i  ]  = cos (  i )  * log ( i  )  ;
+		data3 [ i  ]  =  sin ( i )  / i  ;
+	 }
+}

@@ -1,0 +1,121 @@
+// Trajectory in Physics with Programa
+main () {
+	// Constants
+	pi = 3.14159;
+	// Graphics window
+	frame.x = 0;
+	frame.y = 0;
+	frame.w = 800;
+	frame.h = 600;
+    groundLevel = 80;
+    //- Create graphics window and generate cannon and load
+    createGraphics ( "Projectile Motion" , 50 , 900 , frame.w , frame.h , "sky.jpg"  ) ;
+    makeObject ( inp: name = "cannon", type = "rectangular", x = 10 , y = groundLevel , width = 50 , height = 40 , outlineColor = "" , fillColor = ""  , imageName = "cannon.png"  , out: object = cannon  ) ;
+    x = cannon.x + cannon.width;
+    y = cannon.y + cannon.height;
+    makeObject ( inp: name = "load" ,  type = "circular", x = x , y = y , width = 10 , height = 10 , outlineColor = "black" , fillColor = "red", imageName = "", out: object = load  ) ;
+    //- Create User inteface buttons, inputs, and text
+	createActionButton ( 50 , 550 , 80 , 30 , "CENTER" , "blue" , "black" , "white" , "Arial:12" , "Start" , "startButtonClicked"  ) ;
+	createActionButton ( 150 , 550 , 80 , 30 , "CENTER" , "blue" , "black" , "white" , "Arial:12" , "Finish" , "finishButtonClicked"  ) ;
+    
+	createTextFieldWithLabel ( 300 , 550 , 50 , 20 , "CENTER" , "blue" , "darkGray" , "black" , "Arial:12" , "CENTER" , "Initial Speed" , "clear" , "white" , "Arial:14" , "Speed" ) ;
+    createTextFieldWithLabel ( 400 , 550 , 50 , 20 , "CENTER" , "blue" , "darkGray" , "black" , "Arial:12" , "CENTER" , "Angle" , "clear" , "white" , "Arial:14" , "Angle" ) ;
+    //- Initialization parameters
+    show("start");
+	finishButtonClicked = "false";
+	startButtonClicked  = "false";
+	loadLanded = "true";
+	Speed = 80;
+	time = 0;
+	Angle = 60;
+    experiment = 0;
+	timeStep = 0.05;
+    
+	while ( finishButtonClicked == "false" ) {
+        //- Start a new experiment when user clicks on "Start" button
+		if ( startButtonClicked == "true" ) {
+            load.x = x;
+            load.y = y;
+			startButtonClicked  = "false";
+            angleInPi = Angle * (pi/180);
+            vx = Speed * cos ( angleInPi );
+            vy = Speed * sin ( angleInPi );
+            loadLanded = "false";
+			time = 0;
+            show("new start with :", vx, " ", vy, "@", x, " ", y) ;
+		}
+        //- Calculate the postion of the load at any given time
+		if (   loadLanded == "false"   ) {
+            if (  load.y >= groundLevel  ) {
+                airTime2 = pow ( time, 2 ) ;
+                load.y = y + vy * time - 0.5 * 9.8 * airTime2  ;
+                load.x = load.x + vx * timeStep;
+                nx = load.x;
+                ny = load.y;
+                s = "timeStamp" ;
+                string (s, "time", time);
+                traceTrajectory ( inp: name = s, x = nx, y = ny, experiment = experiment );
+                updateGraphics ( load.name , "position", load.x , load.y  ) ;
+                time = time + timeStep;
+            }
+            //- Stop if load reached ground
+            else {
+                showFinalDistance( inp: object = load, experiment = experiment);
+                loadLanded = "true";
+                show ( "load landed" );
+                experiment++;
+            }
+        }
+        time = time + 0;
+	}
+	show ( "Program finished"  ) ;
+}
+//- Definition of objects
+makeObject (inp: name , type, x , y , width , height , outlineColor , fillColor , imageName out: object  ) {
+	object.x = x;
+	object.y = y;
+	object.width = width;
+	object.height = height;
+	object.name = name;
+    if (type == "circular") {
+        createCircularObject    ( name, x, y, width, height, "LOWER_LEFT", outlineColor, fillColor, imageName  ) ;
+    }
+    else {
+        createRectangularObject ( name, x, y, width, height, "LOWER_LEFT", outlineColor, fillColor, imageName  ) ;
+    }
+}
+//- Trace trajectory
+traceTrajectory (inp: name, x , y , experiment ) {
+    if( experiment == 0 ) {
+        color = "red";
+    }
+    else if(experiment == 1 ) {
+        color = "blue" ;
+    }
+    else if(experiment == 2 ) {
+        color = "brown" ;
+    }
+    else if(experiment == 3 ) {
+        color = "yellow";
+    }
+    createRectangularObject ( name , x , y , 2 , 2 , "CENTER" , color , color  ) ;
+}
+//- Show Distance
+showFinalDistance (inp: object, experiment ) {
+    if( experiment == 0 ) {
+        color = "red";
+    }
+    else if(experiment == 1 ) {
+        color = "blue" ;
+    }
+    else if(experiment == 2 ) {
+        color = "brown" ;
+    }
+    else if(experiment == 3 ) {
+        color = "yellow";
+    }
+    string(finDistance, "dist", experiment);
+    x = object.x - 100;
+    y = object.y - 40;
+    insertText ( "finDistance" , x , y , 200 , 40 , "BOTTOM_LEFT" , "clear" , "clear" , color , "arial:15" , "CENTER" , object.x  ) ;
+}

@@ -1,0 +1,143 @@
+// Trajectory in Physics with Programa
+main () {
+	// Constants
+	pi = 3.14159;
+	// Graphics window
+	frame.x = 0;
+	frame.y = 0;
+	frame.w = 1200;
+	frame.h = 800;
+	airplaneAlt = 700;
+	peopleAtl   = 225;
+	peopleDist  = 875;
+	heightFromRescue = airplaneAlt - peopleAtl;
+	//- Create graphics window and generate airplane, stranded people, and supplies
+	createGraphics ( "Rescue Mission" , 50 , 900 , frame.w , frame.h , "terrain.jpg"  ) ;
+	makeObject ( inp: name = "airplane" , x = 0 , y = airplaneAlt , width = 100 , height = 40 , outlineColor = "" , fillColor = "" , imageName = "airplane.png"  , out: object = airplane  ) ;
+	initial.x = airplane.x ;
+	initial.y = airplane.y ;
+	x = airplane.x + ( airplane.width / 2 ) ;
+	y = airplane.y;
+	makeObject ( inp: name = "supplies" , x = x , y = y , width = 10 , height = 10 , outlineColor = "black" , fillColor = "red" , imageName = ""  , out: object = supplies  ) ;
+	makeObject ( inp: name = "people" , x = peopleDist , y = peopleAtl , width = 25 , height = 25 , outlineColor = "" , fillColor = "" , imageName = "people.png"  , out: object = people  ) ;
+	//- Create User inteface buttons, inputs, and text
+	createActionButton ( 50 , 750 , 80 , 30 , "CENTER" , "blue" , "black" , "white" , "Arial:12" , "Start" , "startButtonClicked"  ) ;
+	createActionButton ( 150 , 750 , 80 , 30 , "CENTER" , "blue" , "black" , "white" , "Arial:12" , "Finish" , "finishButtonClicked"  ) ;
+	createTextFieldWithLabel ( 300 , 760 , 50 , 20 , "CENTER" , "blue" , "darkGray" , "black" , "Arial:12" , "CENTER" , "Speed " , "clear" , "white" , "Arial:14" , "Speed"  ) ;
+	createTextFieldWithLabel ( 400 , 760 , 50 , 20 , "CENTER" , "blue" , "darkGray" , "black" , "Arial:12" , "CENTER" , "Drop Dist" , "clear" , "white" , "Arial:14" , "DropDist"  ) ;
+	createTextFieldWithLabel ( 500 , 760 , 50 , 20 , "CENTER" , "blue" , "darkGray" , "black" , "Arial:12" , "CENTER" , "Wind Speed" , "clear" , "white" , "Arial:14" , "WindSpeed"  ) ;
+	createTextFieldWithLabel ( 600 , 760 , 50 , 20 , "CENTER" , "blue" , "darkGray" , "black" , "Arial:12" , "CENTER" , "Supplies Mass" , "clear" , "white" , "Arial:14" , "mass"  ) ;
+	distanceFromRescue = peopleDist - x;
+	createArrow ( "x" , x , peopleAtl , distanceFromRescue , 3 , "red" , "red" , 0  ) ;
+	string ( xDist , "x = " , distanceFromRescue , " km"  ) ;
+	xLabelLoc.x = distanceFromRescue / 2;
+	xLabelLoc.y = peopleAtl - 40;
+	insertText ( "xAxis" , xLabelLoc.x , xLabelLoc.y , 200 , 40 , "BOTTOM_LEFT" , "clear" , "clear" , "red" , "arial:30" , "CENTER" , xDist  ) ;
+	createArrow ( "y" , x , peopleAtl , heightFromRescue , 3 , "red" , "red" , 90  ) ;
+	string ( yDist , "y = " , heightFromRescue , " km"  ) ;
+	yLabelLoc.x = x + 10;
+	yLabelLoc.y = heightFromRescue/2 + peopleAtl;
+	insertText ( "yAxis" , yLabelLoc.x , yLabelLoc.y , 200 , 40 , "BOTTOM_LEFT" , "clear" , "clear" , "red" , "arial:30" , "CENTER" , yDist  ) ;
+	//- Initialize parameters
+	finishButtonClicked = "false";
+	startButtonClicked  = "false";
+	stopSuppliesMovement = "true";
+	stopAirplaneMovement = "true";
+	Speed = 60;
+	WindSpeed = 0;
+	mass = 10000;
+	time = 0;
+	DropDist = 650;
+	timeStep = 0.05;
+	while (     finishButtonClicked == "false"     ) {
+		//- Reset position of airplane when user clicks on "Start" button
+		if (     startButtonClicked == "true"     ) {
+			stopSuppliesMovement = "false";
+			stopAirplaneMovement = "false";
+			airplane.x = initial.x;
+			airplane.y = initial.y;
+			supplies.x = x;
+			supplies.y = y;
+			dropTime = 0;
+            string( distText, "distText");
+			deleteObject ( distText  ) ;
+			if (  WindSpeed == 0  ) {
+				grColor = "red";
+			}
+			else {
+				grColor = "blue";
+			}
+			show ( "new start at " , x , " " , y  ) ;
+			startButtonClicked  = "false";
+			time = 0;
+		}
+		//- Calculate position of airplane over time
+		if (       stopSuppliesMovement == "false"       ) {
+			// Drop distance has been reached
+			if (      people.x - airplane.x < DropDist      ) {
+				if (     dropTime == 0     ) {
+					dropTime = time;
+				}
+				airTime = time - dropTime;
+				airTime2 = pow ( airTime , 2  ) ;
+				airDensity = 1.2;
+				windAirForce = 0.5 * airDensity * WindSpeed * WindSpeed * supplies.width ;
+				supplies.y = airplane.y - 0.5 * 9.8 * airTime2  ;
+				supplies.x = supplies.x + Speed * timeStep;
+				supplies.x = supplies.x - ( 0.5 * windAirForce * airTime2 ) / mass;
+				s = "timeStamp" ;
+				string ( s , "time" , airTime  ) ;
+				//- Store the trajectory of each trial
+				traceTrajectory ( inp: name = s , color = grColor , x = supplies.x , y = supplies.y  ) ;
+			}
+			else {
+				supplies.x = airplane.x + x;
+			}
+			updateGraphics ( supplies.name , "position" , supplies.x , supplies.y  ) ;
+			if (     supplies.y <= peopleAtl     ) {
+				show ( "supplies landed"  ) ;
+				finalDistance = peopleDist - supplies.x;
+				string ( dist , finalDistance  ) ;
+				insertText ( distText , supplies.x , peopleAtl , 200 , 50 , "BOTTOM_LEFT" , "clear" , "clear" , grColor , "arial:24" , "LEFT" , dist  ) ;
+				stopSuppliesMovement = "true" ;
+			}
+		}
+		if (     stopAirplaneMovement == "false"     ) {
+			airplane.x = airplane.x + Speed * timeStep;
+			updateGraphics ( airplane.name , "position" , airplane.x , airplane.y  ) ;
+			if (     airplane.x > frame.x + frame.w     ) {
+				stopAirplaneMovement = "true";
+			}
+		}
+		time = time + timeStep;
+	}
+	show ( "Program finished"  ) ;
+}
+//- Definition of objects
+makeObject (inp: name , x , y , width , height , outlineColor , fillColor , imageName out: object  ) {
+	//F// makeObject :  (null)
+	//P// name :  (null)
+	//P// x :  (null)
+	//P// y :  (null)
+	//P// width :  (null)
+	//P// height :  (null)
+	//P// outlineColor :  (null)
+	//P// fillColor :  (null)
+	//P// imageName :  (null)
+	//P// object :  (null)
+	object.x = x;
+	object.y = y;
+	object.width = width;
+	object.height = height;
+	object.name = name;
+	createRectangularObject ( name , x , y , width , height , "LOWER_LEFT" , outlineColor , fillColor , imageName  ) ;
+}
+//- Trace trajectory
+traceTrajectory (inp: name , color , x , y  ) {
+	//F// traceTrajectory :  (null)
+	//P// name :  (null)
+	//P// color :  (null)
+	//P// x :  (null)
+	//P// y :  (null)
+	createRectangularObject ( name , x , y , 2 , 2 , "CENTER" , color , color  ) ;
+}

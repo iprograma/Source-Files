@@ -1,0 +1,35 @@
+// Program that tests basic queries on a text file
+main ( ) {
+    queryName = "Lions" ;
+    n = readDataFromFile ( "TeamStats.txt" , teamNames , teamScores )  ;
+    MinMaxQuery ( inp : teamNames = teamNames , teamScores = teamScores , queryName = queryName , out : minIndex = minIndex , maxIndex = maxIndex , rank = rank , queryScore = queryScore )  ;
+    show ( "Team  Score" )  ;
+    show ( teamNames , teamScores )  ;
+    show ( "The best team is " , teamNames [ maxIndex ]  , " with " , teamScores [ maxIndex ]  , " score" )  ;
+    show ( "The worst team is " , teamNames [ minIndex ]  , " with " , teamScores [ minIndex ]  , " score" )  ;
+    show ( "Team " , 	queryName , " is ranked " , rank ,  " with " , queryScore , " score" )  ;
+}
+MinMaxQuery ( inp : teamNames , teamScores , queryName , out : minIndex , maxIndex , rank , queryScore ) {
+    rank = 1 ;
+    max = 0 ;
+    min = 1000 ;
+    for ( i = 0 ; i < lengthOf ( teamNames ) ; i = i + 1 ) {
+        if ( queryName == teamNames [ i ] ) {
+            queryScore = teamScores [ i ]  ;
+        }
+    }
+    
+    for ( i = 0 ; i < lengthOf ( teamNames ) ; i = i + 1 ) {
+        if ( max < teamScores [ i ]  ) {
+            max = teamScores [ i ]  ;
+            maxIndex = i ;
+        }
+        if ( min > teamScores [ i ]  ) {
+            min = teamScores [ i ]  ;
+            minIndex = i ;
+        }
+        if ( queryScore < teamScores [ i ] ) {
+            rank ++  ;
+        }
+    }
+}

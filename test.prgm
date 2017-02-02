@@ -1,0 +1,4 @@
+// This is a comment
+main () {
+	create3DTriangle ( "3" , 34 , 34 , number , 5 , 7 , "3"  ) ;
+}

@@ -1,0 +1,126 @@
+// Program to explore statistics
+main ( ) {
+	a = -234.5;
+	x[0].name = 5.0;
+	someName = "name";
+	y = x[0].[someName];
+	error = 0;
+	
+	if( y != 5)  {
+		show("ERROR on y. It is ", y, " instead of 5");
+		error = 1 ;
+	}
+	
+	if( a !=  -234.5 ) {
+		show("ERROR on a. It is ", a, " instead of -234.5");
+		error = 1 ;
+	}
+	
+	readAndAnalyzeDataFromFile ( "NCAAStatsTest.txt", statistics ) ;
+
+	findTopN ( inp: dataArray=statistics, N=5, type="max", fieldCheck="PTS", fieldName="TEAM", out: resultList=res, resultNames=names);
+
+    show ( "This is how you typically show output" ) ;
+	show ( "1: ", names[0], "\t", res[0], "\n2: ", names[1], "\t", res[1], "\n3: ", names[2], "\t", res[2], "\n4: ", names[3], "\t", res[3], "\n5: ", names[4], "\t", res[4] ) ;
+	for(i=0; i<5; i=i+1) {
+		show ( i, " => ", names[i], "\t\t", res[i] ) ;
+	}
+	
+	if ( res[0] != 2895 || res[1] != 2892 || res[2] != 2863 || res[3] !=  2802 || res[4] != 2782 ) {
+		show("ERROR in stats2 for Total points scored");
+		error = 1;
+	} 
+
+    show ( @color=red@, @type=bold@, "\nThis is how you can show results using Programa", @endcolor@, @endtype@ ) ;
+	show ( @color=blue@, @type=underline@, "Team Points Scored", @endcolor@, @endtype@ ) ;
+	show ( @color=brown@, names, @endcolor@, @color=darkGrey@, res, @endcolor@ ) ;
+	
+	if( error == 1 ) {
+		show ( "\n\nTEST FAILED\n\n" ) ;
+	}
+	else {
+		show ( "\n\nALL TESTS PASSED\n\n" ) ;
+	}
+
+}
+// -------------------------------------------------
+findTopN( inp: dataArray, N, type, fieldCheck, fieldName, out: resultList, resultNames) {
+	
+	itemsFound = 0;
+	dataLength = lengthOf(dataArray);
+	for(i=0; i< dataLength; i++) {
+		num  = dataArray[i].[fieldCheck];
+		name = dataArray[i].[fieldName];
+		if( itemsFound == 0 ) {
+			resultList[itemsFound] = num;
+			resultNames[itemsFound] = name;
+			itemsFound++;
+		}
+		else {
+			valueInserted = 0;
+			for(j=0; j<itemsFound; j++) {
+				compResult = num - resultList[j];
+				if ( type == "max" && compResult >= 0 || type == "min" && compResult < 0) {
+					for(k=itemsFound; k >= j + 1 ; k-- ) {
+						resultList[k] = resultList[k-1];
+						resultNames[k] = resultNames[k-1];
+					}
+					resultList[j] = num;
+					resultNames[j] = name;
+					valueInserted = 1;
+					if( itemsFound < N-1 ) {
+						itemsFound++;
+					}
+					break; // j = itemsFound; // This is a break statement
+				}					
+			}
+			if ( valueInserted == 0 && itemsFound < N-1 ) {
+				resultList[itemsFound] = num;
+				resultNames[itemsFound] = name;
+				itemsFound = itemsFound + 1;
+			}
+		}
+	}
+}
+
+#if 0
+calculateStats( inp: dataArray, out: ave, min, max) {
+	max = -10000;
+	min = 10000;
+	ave = 0;
+	
+	for(i=0; i< lengthOf(dataArray); i = i + 1) {
+		ave = ave + dataArray[i];
+		if ( dataArray[i] >  max ) {
+			max = dataArray[i];
+		}
+		if ( dataArray[i] < min ) {
+			min = dataArray[i];
+		}
+	}
+	ave = ave / lengthOf(dataArray);
+}
+#endif
+
+#if 0
+	max = -1000 ;
+	min = 1000 ;
+	ave = 0 ;
+	bestName = "a" ;
+	worstName = "b" ;
+
+	for ( i = 0 ; i < n ; i = i  + 1 ) {
+		ave = ave + data [ i ] ;
+		if ( data [ i ] > max ) {
+			max = data [ i ] ;
+			bestName = teamNames [ i ] ;
+		} 
+		else if ( data [ i ] < min ) {
+			min = data [ i ] ;
+			worstName = teamNames [ i ] ;
+		}
+	}
+	ave = ave / n ;
+	show ( "Data = ", n, "\nAve = ", ave, "\nMax = ", max, "\nMin = ", min, "\nWorst Team is: ", worstName, "\nBest Team is: ", bestName ) ;
+#endif
+
